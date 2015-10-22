@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export function initialize(instance) {
-  const lookup = instance.lookup && instance.lookup.bind(instance) || instance.container.lookup && instance.container.lookup.bind(instance.container);
-  const router = lookup('router:main');
+  const ROUTER_NAME = 'router:main';
+  const router = (typeof instance.lookup === 'function' ? instance.lookup(ROUTER_NAME) : instance.container.lookup(ROUTER_NAME));
 
   router.on('willTransition', function(transition) {
     const pivotHandler = transition.pivotHandler;
