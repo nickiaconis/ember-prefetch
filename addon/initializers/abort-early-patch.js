@@ -3,7 +3,7 @@ import Ember from 'ember';
 let hasInitialized = false;
 
 function abortBeforeTransitioning() {
-  const activeTransition = this.router.router.activeTransition;
+  const activeTransition = this.router.activeTransition;
 
   if (activeTransition != null) {
     activeTransition.abort();
