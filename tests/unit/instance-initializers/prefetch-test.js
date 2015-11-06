@@ -47,6 +47,21 @@ test('the prefetch hook is invoked', function(assert) {
   assert.equal(handler.prefetched, promise, 'the promise is set on the handler as prefetched');
 });
 
+test('transition with no handlerInfos is a noop', function(assert) {
+  assert.expect(1);
+
+  initialize(instance);
+
+  const router = instance.lookup('router:main');
+  const promise = new Ember.RSVP.resolve(1);
+  const runSharedModelHook = this.stub().returns(promise);
+  const transition = {};
+
+  router.trigger('willTransition', transition);
+
+  assert.equal(runSharedModelHook.called, false, 'noop');
+});
+
 test('handler.prefetched._prefetchReturnedUndefined is set correctly', function(assert) {
   assert.expect(2);
 

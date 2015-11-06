@@ -10,6 +10,10 @@ export function initialize(instance) {
     // If there is no pivot, we should try to prefetch all handlers.
     let hasSeenPivot = pivotHandler == null ? true : false;
 
+    if (!transition.handlerInfos) {
+      return;
+    }
+
     transition.handlerInfos.forEach(function(handlerInfo) {
       // Don't prefetch handlers above the pivot.
       if (!hasSeenPivot) {
