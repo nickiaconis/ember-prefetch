@@ -5,6 +5,12 @@ export function initialize(instance) {
   const router = (typeof instance.lookup === 'function' ? instance.lookup(ROUTER_NAME) : instance.container.lookup(ROUTER_NAME));
 
   router.on('willTransition', function(transition) {
+    Ember.assert('Router#willTransition was fired with a transition that has no handlerInfos, but is not a queryParamOnly transition.', transition.handlerInfos || transition.queryParamsOnly);
+
+    if (!transition.handlerInfos) {
+      return;
+    }
+
     const pivotHandler = transition.pivotHandler;
 
     // If there is no pivot, we should try to prefetch all handlers.
