@@ -3,14 +3,15 @@ import Ember from 'ember';
 let hasInitialized = false;
 
 function triggerAfterTransitioning() {
+  const oldInfos = this.router.state.handlerInfos;
   const transition = this._super(...arguments);
 
   // Router.js does not trigger `willTransition` when redirecting. We need
   // `willTransition` to be triggered regardless so that the `prefetch` hook is
-  // always invoked for the routes in the new transition. Using
-  // `Ember.run.once` gurantees that we will not trigger `willTransition`
-  // multiple times.
-  Ember.run.once(this, this.trigger, 'willTransition', transition);
+  // always invoked for the routes in the new transition. Internally, the
+  // `willTransition` hook uses `Ember.run.once` to fire the event, which
+  // gurantees that it will not trigger `willTransition` multiple times.
+  this.willTransition(oldInfos, transition.state.handlerInfos, transition);
 
   return transition;
 }
