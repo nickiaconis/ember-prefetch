@@ -9,6 +9,10 @@ Router.map(function() {
   this.route('foo');
   this.route('bar');
   this.route('queryparams');
+
+  this.route('abort-transition-to-child', function() {
+    this.route('child');
+  });
 });
 
 export default Router;
