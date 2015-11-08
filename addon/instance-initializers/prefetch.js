@@ -18,7 +18,7 @@ export function initialize(instance) {
 
     transition.handlerInfos.forEach(function(handlerInfo) {
       // Don't prefetch handlers above the pivot.
-      if (!hasSeenPivot) {
+      if (!hasSeenPivot || transition.isAborted) {
         // The pivot is the first common ancestor, so it is skipped as well.
         if (handlerInfo.handler === pivotHandler) {
           hasSeenPivot = true;
