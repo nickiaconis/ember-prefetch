@@ -30,7 +30,7 @@ export default Ember.Mixin.create({
 
       model(params) {
         return Ember.RSVP.hash({
-          postAuthor: this.prefetched(this.routeName),
+          postAuthor: this.prefetched(),
           comments: this.store.findAll('comment')
         });
       }
@@ -38,18 +38,20 @@ export default Ember.Mixin.create({
     ```
 
     @method prefetched
-    @param {String} name the name of the route
-    @return {Promise} a promise that resolves with the prefetched data
+    @param {String} [name] - The name of the route. Defaults to the current route if no name is given.
+    @return {Promise} A promise that resolves with the prefetched data.
     @public
   */
-  // prefetched(name) {
-  //   var route = this.container.lookup(`route:${name}`);
-  //   return Ember.RSVP.Promise.resolve(route && route.asyncData);
-  // },
-
+  prefetched(name) {
+    if (arguments.length < 1) {
+      name = this.routeName;
+    }
+    const route = this.container.lookup(`route:${name}`);
+    return Ember.RSVP.Promise.resolve(route && route._prefetched);
+  },
 
   model(params, transition) {
-    const prefetched = this.prefetched;
+    const prefetched = this._prefetched;
 
     if (prefetched && !prefetched._prefetchReturnedUndefined) {
       return prefetched;

@@ -44,10 +44,10 @@ test('the prefetch hook is invoked', function(assert) {
 
   assert.ok(runSharedModelHook.calledTwice, 'handlerInfo.runSharedModelHook is called once per handlerInfo');
   assert.ok(runSharedModelHook.calledWith(transition, 'prefetch'), 'handlerInfo.runSharedModelHook is called with the transition and "prefetch"');
-  assert.equal(handler.prefetched, promise, 'the promise is set on the handler as prefetched');
+  assert.equal(handler._prefetched, promise, 'the promise is set on the handler as _prefetched');
 });
 
-test('handler.prefetched._prefetchReturnedUndefined is set correctly', function(assert) {
+test('handler._prefetched._prefetchReturnedUndefined is set correctly', function(assert) {
   assert.expect(2);
 
   initialize(instance);
@@ -65,7 +65,7 @@ test('handler.prefetched._prefetchReturnedUndefined is set correctly', function(
   const transitionWithValue = { handlerInfos: handlerInfosWithValue };
 
   router.trigger('willTransition', transitionWithValue);
-  assert.notOk(handler.prefetched._prefetchReturnedUndefined, '_prefetchReturnedUndefined is false because the promise was resolved with something other than undefined');
+  assert.notOk(handler._prefetched._prefetchReturnedUndefined, '_prefetchReturnedUndefined is false because the promise was resolved with something other than undefined');
 
   // simulate prefetch returning undefined
   const resolvedWithUndefined = new Ember.RSVP.resolve(undefined);
@@ -77,5 +77,5 @@ test('handler.prefetched._prefetchReturnedUndefined is set correctly', function(
   const transitionWithUndefined = { handlerInfos: handlerInfosWithUndefined };
 
   router.trigger('willTransition', transitionWithUndefined);
-  assert.ok(handler.prefetched._prefetchReturnedUndefined, '_prefetchReturnedUndefined is true because the promise was resolved with undefined');
+  assert.ok(handler._prefetched._prefetchReturnedUndefined, '_prefetchReturnedUndefined is true because the promise was resolved with undefined');
 });
