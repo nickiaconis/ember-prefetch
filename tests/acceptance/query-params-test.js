@@ -2,6 +2,9 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import startApp from '../../tests/helpers/start-app';
 
+const QUERYPARAMS_ROUTE_NAME = 'queryparams';
+const QUERYPARAMS_ROUTE_URL = '/queryparams';
+
 module('Acceptance | query-params', {
   beforeEach: function() {
     this.application = startApp();
@@ -15,26 +18,100 @@ module('Acceptance | query-params', {
   },
 });
 
-test('visiting a route with query params does not break the prefetch hook', function(assert) {
-  assert.expect(5);
+test('loading a route with a query param runs the prefetch hook', function(assert) {
+  assert.expect(3);
 
-  visit('/queryparams');
+  visit(`${QUERYPARAMS_ROUTE_URL}?foo=bar`);
 
   andThen(() => {
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was invoked for the initial transition');
+    const url = currentURL();
+    assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
+    assert.equal(url.substring(url.indexOf('?')), '?foo=bar', 'the query param is set');
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was invoked');
+  });
+});
 
-    this.router.transitionTo('queryparams', { queryParams: { foo: 'bar' } });
+test('loading a route with a query param marked with refreshModel runs the prefetch hook', function(assert) {
+  assert.expect(3);
+
+  visit(`${QUERYPARAMS_ROUTE_URL}?fiz=baz`);
+
+  andThen(() => {
+    const url = currentURL();
+    assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
+    assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was invoked');
+  });
+});
+
+test('transitioning to a route with a query param runs the prefetch hook', function(assert) {
+  assert.expect(3);
+
+  visit('/');
+
+  andThen(() => {
+    this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { foo: 'bar' } });
   });
 
   andThen(() => {
-    assert.equal(currentURL(), '/queryparams?foo=bar', 'the URL contains the query params');
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was not invoked again');
+    const url = currentURL();
+    assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
+    assert.equal(url.substring(url.indexOf('?')), '?foo=bar', 'the query param is set');
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run');
+  });
+});
 
-    this.router.transitionTo('queryparams', { queryParams: { fiz: 'baz', foo: null } });
+test('transitioning to a route with a query param marked with refreshModel runs the prefetch hook', function(assert) {
+  assert.expect(3);
+
+  visit('/');
+
+  andThen(() => {
+    this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'baz' } });
   });
 
   andThen(() => {
-    assert.equal(currentURL(), '/queryparams?fiz=baz', 'the URL contains the new query params');
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 2, 'queryparams\' prefetch hook was invoked again because fiz is marked with refreshModel');
+    const url = currentURL();
+    assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
+    assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run');
+  });
+});
+
+test('changing a query param does not run the prefetch hook', function(assert) {
+  assert.expect(4);
+
+  visit(`${QUERYPARAMS_ROUTE_URL}`);
+
+  andThen(() => {
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+
+    this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { foo: 'bar' } });
+  });
+
+  andThen(() => {
+    const url = currentURL();
+    assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
+    assert.equal(url.substring(url.indexOf('?')), '?foo=bar', 'the query param is set');
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was not run again');
+  });
+});
+
+test('changing a query param marked with refreshModel runs the prefetch hook', function(assert) {
+  assert.expect(4);
+
+  visit(`${QUERYPARAMS_ROUTE_URL}`);
+
+  andThen(() => {
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+
+    this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'baz', foo: null } });
+  });
+
+  andThen(() => {
+    const url = currentURL();
+    assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
+    assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
+    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 2, 'the prefetch hook was run again');
   });
 });
