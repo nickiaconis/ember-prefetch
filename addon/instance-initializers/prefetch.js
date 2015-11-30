@@ -4,6 +4,8 @@ export function initialize(instance) {
   const ROUTER_NAME = 'router:main';
   const router = (typeof instance.lookup === 'function' ? instance.lookup(ROUTER_NAME) : instance.container.lookup(ROUTER_NAME));
 
+  let routeParamsMap = {};
+
   router.on('willTransition', function(transition) {
     Ember.assert('Router#willTransition was fired with a transition that has no handlerInfos, but is not a queryParamOnly transition.', transition.handlerInfos || transition.queryParamsOnly);
 
@@ -39,6 +41,14 @@ export function initialize(instance) {
         fullParams.queryParams = transition.queryParams;
       }
 
+      // Skip handlers that have already run with the same params.
+      if (JSON.stringify(routeParamsMap[handlerInfo.name]) === JSON.stringify(fullParams)) {
+        return;
+      }
+
+      // Remember the last set of params with which the handler was run.
+      routeParamsMap[handlerInfo.name] = fullParams;
+
       // Run the prefetch hook if the route has one.
       const promise = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
 
@@ -49,6 +59,10 @@ export function initialize(instance) {
 
       handlerInfo.handler.prefetched = promise;
     });
+  });
+
+  router.on('didTransition', function() {
+    routeParamsMap = {};
   });
 }
 
