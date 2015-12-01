@@ -30,18 +30,18 @@ App.PostCommentsRoute = Ember.Route.extend({
 The default functionality of the `model` hook will pick up whatever is returned from the `prefetch` hook.
 A route that defines a `prefetch` hook is not required to define a `model` hook.
 
-The `prefetched` property provides access to a route's prefetched data. `prefetched` will always be a promise, but ES7 async function syntax makes working with it easy.
+The `prefetched` method provides access to routes' prefetched data. `prefetched` will always return a promise, but ES7 async function syntax makes working with it easy.
 
 ```javascript
 App.PostCommentsRoute = Ember.Route.extend({
   prefetch(params, transition) {
-    return Ember.$.get(`/api/posts/${transition.params.post.id}/comments`);
+    return Ember.$.get(`/api/posts/${this.paramsFor('post').id}/comments`);
   },
 
   async model() {
     return {
-      OP: this.modelFor('post')).author,
-      comments: await this.prefetched
+      OP: (await this.prefetched('post')).author,
+      comments: await this.prefetched(),
     };
   }
 });

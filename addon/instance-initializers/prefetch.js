@@ -47,7 +47,7 @@ export function initialize(instance) {
       // the model hook should ignore the prefetched property.
       promise._prefetchReturnedUndefined = (!!promise._state && typeof promise._result === 'undefined');
 
-      handlerInfo.handler.prefetched = promise;
+      handlerInfo.handler._prefetched = promise;
     });
   });
 }
