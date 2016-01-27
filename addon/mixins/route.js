@@ -1,11 +1,13 @@
 import Ember from 'ember';
 
+const { Mixin, RSVP, getOwner } = Ember;
+
 /**
  * An implementation detail of testing the prefetch initializer.
  *
  * @mixin RouteMixin
  */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Returns a promise that resolves the prefetched data of a parent
     (or any ancestor) route in a route hierarchy.  During a transition,
@@ -46,8 +48,9 @@ export default Ember.Mixin.create({
     if (arguments.length < 1) {
       name = this.routeName;
     }
-    const route = this.container.lookup(`route:${name}`);
-    return Ember.RSVP.Promise.resolve(route && route._prefetched);
+    const container = getOwner ? getOwner(this) : this.container;
+    const route = container.lookup(`route:${name}`);
+    return RSVP.Promise.resolve(route && route._prefetched);
   },
 
   model(params, transition) {
