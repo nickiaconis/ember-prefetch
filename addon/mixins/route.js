@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 const { Mixin, RSVP, getOwner } = Ember;
+const PREFETCH_NOT_DEFINED = {};
 
 /**
  * An implementation detail of testing the prefetch initializer.
@@ -53,13 +54,25 @@ export default Mixin.create({
     return RSVP.Promise.resolve(route && route._prefetched);
   },
 
-  model(params, transition) {
-    const prefetched = this._prefetched;
+  prefetch() {
+    return PREFETCH_NOT_DEFINED;
+  },
 
-    if (prefetched && !prefetched._prefetchReturnedUndefined) {
-      return prefetched;
+  model() {
+    const prefetched = this._prefetched;
+    const _super = this._super;
+
+    if (!prefetched) {
+      return _super.call(this, ...arguments);
     }
 
-    return this._super(params, transition);
+    return prefetched.then((value) => {
+      // If a prefetch hook is not defined, the default model hook is used.
+      if (value === PREFETCH_NOT_DEFINED) {
+        return _super.call(this, ...arguments);
+      }
+
+      return value;
+    });
   },
 });

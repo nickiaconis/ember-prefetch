@@ -27,8 +27,10 @@ test('an Ember#Route\'s default model hook returns its prefetched property', fun
 
   initialize(registry, application);
 
-  const data = { _prefetchReturnedUndefined: false };
-  const route = Ember.Route.create({ _prefetched: data });
+  const data = {};
+  const route = Ember.Route.create({ _prefetched: Ember.RSVP.Promise.resolve(data) });
 
-  assert.equal(route.model(), data, 'the model hook returns prefetched');
+  return route.model().then((model) => {
+    assert.equal(model, data, 'the model hook returns prefetched');
+  });
 });

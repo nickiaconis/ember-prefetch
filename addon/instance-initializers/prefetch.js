@@ -38,14 +38,7 @@ export function initialize(instance) {
       }
 
       // Run the prefetch hook if the route has one.
-      const promise = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
-
-      // runSharedModelHook always returns a promise. We check to see if the
-      // promise has already resolved with a value of undefined. If it has,
-      // the model hook should ignore the prefetched property.
-      promise._prefetchReturnedUndefined = (!!promise._state && typeof promise._result === 'undefined');
-
-      handlerInfo.handler._prefetched = promise;
+      handlerInfo.handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
     });
   });
 }
