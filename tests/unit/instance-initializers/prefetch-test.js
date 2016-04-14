@@ -3,7 +3,7 @@ import { initialize } from '../../../instance-initializers/prefetch';
 import { module } from 'qunit';
 import test from 'dummy/tests/ember-sinon-qunit/test';
 
-var application, instance;
+let application, instance;
 
 module('Unit | Instance Initializer | prefetch', {
   beforeEach() {
@@ -23,20 +23,21 @@ module('Unit | Instance Initializer | prefetch', {
 });
 
 test('the prefetch hook is invoked', function(assert) {
-  assert.expect(3);
+  assert.expect(4);
 
   initialize(instance);
 
   const router = instance.lookup('router:main');
   const promise = new Ember.RSVP.resolve(1);
   const runSharedModelHook = this.stub().returns(promise);
-  const handler = {};
+  const handler1 = {};
+  const handler2 = {};
   const handlerInfos = [{
     runSharedModelHook,
-    handler,
+    handler: handler1,
   }, {
     runSharedModelHook,
-    handler,
+    handler: handler2,
   }];
   const transition = { handlerInfos };
 
@@ -44,38 +45,6 @@ test('the prefetch hook is invoked', function(assert) {
 
   assert.ok(runSharedModelHook.calledTwice, 'handlerInfo.runSharedModelHook is called once per handlerInfo');
   assert.ok(runSharedModelHook.calledWith(transition, 'prefetch'), 'handlerInfo.runSharedModelHook is called with the transition and "prefetch"');
-  assert.equal(handler._prefetched, promise, 'the promise is set on the handler as _prefetched');
-});
-
-test('handler._prefetched._prefetchReturnedUndefined is set correctly', function(assert) {
-  assert.expect(2);
-
-  initialize(instance);
-
-  const router = instance.lookup('router:main');
-  const handler = {};
-
-  // simulate prefetch returning a value
-  const resolvedWithValue = new Ember.RSVP.resolve(1);
-  const runSharedModelHookWithValue = this.stub().returns(resolvedWithValue);
-  const handlerInfosWithValue = [{
-    runSharedModelHook: runSharedModelHookWithValue,
-    handler,
-  }];
-  const transitionWithValue = { handlerInfos: handlerInfosWithValue };
-
-  router.trigger('willTransition', transitionWithValue);
-  assert.notOk(handler._prefetched._prefetchReturnedUndefined, '_prefetchReturnedUndefined is false because the promise was resolved with something other than undefined');
-
-  // simulate prefetch returning undefined
-  const resolvedWithUndefined = new Ember.RSVP.resolve(undefined);
-  const runSharedModelHookWithUndefined = this.stub().returns(resolvedWithUndefined);
-  const handlerInfosWithUndefined = [{
-    runSharedModelHook: runSharedModelHookWithUndefined,
-    handler,
-  }];
-  const transitionWithUndefined = { handlerInfos: handlerInfosWithUndefined };
-
-  router.trigger('willTransition', transitionWithUndefined);
-  assert.ok(handler._prefetched._prefetchReturnedUndefined, '_prefetchReturnedUndefined is true because the promise was resolved with undefined');
+  assert.equal(handler1._prefetched, promise, 'the promise is set on handler1 as _prefetched');
+  assert.equal(handler2._prefetched, promise, 'the promise is set on handler2 as _prefetched');
 });
