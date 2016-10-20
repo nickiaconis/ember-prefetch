@@ -14,6 +14,9 @@ export function initialize(instance) {
     // If there is no pivot, we should try to prefetch all handlers.
     let hasSeenPivot = pivotHandler == null ? true : false;
 
+    // For asynchronously loaded handlers, we chain them to ensure
+    // resolution order.
+    let handlerPromiseChain = Ember.RSVP.resolve();
     transition.handlerInfos.forEach(function(handlerInfo) {
       // Don't prefetch handlers above the pivot.
       if (!hasSeenPivot || transition.isAborted) {
@@ -38,7 +41,15 @@ export function initialize(instance) {
       }
 
       // Run the prefetch hook if the route has one.
-      handlerInfo.handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
+      if (!handlerInfo.handler && handlerInfo.handlerPromise) {
+        handlerPromiseChain = handlerPromiseChain.then(() => (
+          handlerInfo.handlerPromise.then((handler) => {
+            handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
+          })
+        ));
+      } else {
+        handlerInfo.handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
+      }
     });
   });
 }
