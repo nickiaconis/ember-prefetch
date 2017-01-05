@@ -4,7 +4,8 @@ This addon provides an implementation of the `prefetch` hook from [Ember RFC #97
 
 ## Installation
 
-* `npm install [--save|--save-dev] ember-prefetch`
+* `yarn add ember-prefetch`
+* alternate: `npm install [--save|--save-dev] ember-prefetch`
 
 ## Usage
 
@@ -49,8 +50,10 @@ App.PostCommentsRoute = Ember.Route.extend({
 
 ## Contributing
 
+Make sure you have Yarn installed. ([How do I install Yarn?](https://yarnpkg.com/en/docs/install))
+
 * `git clone` this repository
-* `npm install`
+* `yarn install`
 * `bower install`
 
 ## Running Tests
