@@ -54,7 +54,7 @@ Make sure you have Yarn installed. ([How do I install Yarn?](https://yarnpkg.com
 
 * `git clone` this repository
 * `yarn install`
-* `bower install`
+* `node_modules/bower/bin/bower install`
 
 ## Running Tests
 
