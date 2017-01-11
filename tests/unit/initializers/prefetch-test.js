@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { initialize } from '../../../initializers/prefetch';
 import { module } from 'qunit';
-import test from 'dummy/tests/ember-sinon-qunit/test';
+import test from 'ember-sinon-qunit/test-support/test';
 
 var registry, application;
 

@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { initialize } from '../../../instance-initializers/prefetch';
 import RouteMixin from 'ember-prefetch/mixins/route';
 import { module } from 'qunit';
-import test from 'dummy/tests/ember-sinon-qunit/test';
+import test from 'ember-sinon-qunit/test-support/test';
 
 const { Promise } = Ember.RSVP;
 let application, instance;
