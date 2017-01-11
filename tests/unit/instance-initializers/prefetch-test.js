@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { initialize } from '../../../instance-initializers/prefetch';
 import { module } from 'qunit';
-import test from 'dummy/tests/ember-sinon-qunit/test';
+import test from 'ember-sinon-qunit/test-support/test';
 import wait from 'ember-test-helpers/wait';
 
 const { RSVP: { Promise } } = Ember;
