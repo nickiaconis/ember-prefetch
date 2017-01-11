@@ -9,42 +9,44 @@ This addon provides an implementation of the `prefetch` hook from [Ember RFC #97
 
 ## Usage
 
+### Route#prefetch
+
 The `prefetch` hook is used largely the same as the `model` hook.
 It takes the same parameters (`params` and `transition`) and is not called if an object has been passed to the transition.
-However, the `prefetch` hook for all routes in a transition are invoked at the beginning of the transition.
-This allows child routes to resolve faster because their requests are made in parallel with their parents'.
+However, the `prefetch` hook of all routes involved in a transition are invoked at the beginning of that transition.
+This enables child routes to settle faster because their network requests are made in parallel with their parents'.
 
 ```javascript
 App.PostRoute = Ember.Route.extend({
   prefetch(params) {
     return Ember.$.get(`/api/posts/${params.id}`);
-  }
+  },
 });
 
 App.PostCommentsRoute = Ember.Route.extend({
   prefetch(params, transition) {
-    return Ember.$.get(`/api/posts/${transition.params.post.id}/comments`);
-  }
+    return Ember.$.get(`/api/posts/${this.paramsFor('post').id}/comments`);
+  },
 });
 ```
 
 The default functionality of the `model` hook will pick up whatever is returned from the `prefetch` hook.
 A route that defines a `prefetch` hook is not required to define a `model` hook.
 
-The `prefetched` method provides access to routes' prefetched data. `prefetched` will always return a promise, but ES7 async function syntax makes working with it easy.
+### Route#prefetched
+
+The `prefetched` method provides access to routes' prefetched data.
+`prefetched` always returns a promise, but ES7 async function syntax simplifies working with promises.
 
 ```javascript
 App.PostCommentsRoute = Ember.Route.extend({
-  prefetch(params, transition) {
-    return Ember.$.get(`/api/posts/${this.paramsFor('post').id}/comments`);
-  },
-
-  async model() {
+  async prefetch(params, transition) {
     return {
+      // getting a parent route's data; the syntax is akin to `paramsFor`
       OP: (await this.prefetched('post')).author,
-      comments: await this.prefetched(),
+      comments: await Ember.$.get(`/api/posts/${this.paramsFor('post').id}/comments`),
     };
-  }
+  },
 });
 ```
 
