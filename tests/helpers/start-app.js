@@ -6,7 +6,12 @@ export default function startApp(attrs) {
   let application;
 
   // use defaults, but you can override
-  let attributes = Ember.assign({}, config.APP, attrs);
+  let attributes;
+  if (typeof Ember.assign === 'function') {
+    attributes = Ember.assign({}, config.APP, attrs);
+  } else {
+    attributes = Ember.merge(Ember.merge({}, config.APP), attrs);
+  }
 
   Ember.run(() => {
     application = Application.create(attributes);

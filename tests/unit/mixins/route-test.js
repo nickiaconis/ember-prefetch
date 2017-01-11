@@ -12,7 +12,7 @@ module('Unit | Mixin | route', {
     Ember.run(function() {
       application = Ember.Application.create();
       instance = application.buildInstance();
-      instance.setupRegistry();
+      if (typeof instance.setupRegistry === 'function') { instance.setupRegistry(); }
       initialize(instance);
     });
   },
