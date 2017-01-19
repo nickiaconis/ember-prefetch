@@ -1375,9 +1375,9 @@ ember-cli-htmlbars@1.1.1, ember-cli-htmlbars@^1.0.0:
     json-stable-stringify "^1.0.0"
     strip-bom "^2.0.0"
 
-ember-cli-inject-live-reload@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/ember-cli-inject-live-reload/-/ember-cli-inject-live-reload-1.4.1.tgz#ddadb9a346c5ed694ec0f9e11f49994eacafd277"
+ember-cli-inject-live-reload@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-inject-live-reload/-/ember-cli-inject-live-reload-1.5.0.tgz#ad8033a10a564ec20f251f7fa456b5e789536e37"
 
 ember-cli-is-package-missing@^1.0.0:
   version "1.0.0"
