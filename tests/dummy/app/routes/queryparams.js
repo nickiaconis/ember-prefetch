@@ -2,9 +2,12 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   queryParams: {
+    fib: {
+      refreshModel: true,
+    },
     fiz: {
-      refreshModel: true
-    }
+      refreshModel: true,
+    },
   },
 
   prefetch() {
