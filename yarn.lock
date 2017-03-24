@@ -1657,9 +1657,9 @@ ember-sinon@0.6.0, ember-sinon@~0.6.0:
     ember-cli-babel "^5.1.7"
     sinon "^1.17.6"
 
-ember-source@2.11.1:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-2.11.1.tgz#8e19a38497670e8500f7e631d215bd2784ffe4b5"
+ember-source@2.11.2:
+  version "2.11.2"
+  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-2.11.2.tgz#07239925dc8fc2a8377bdf43210c42093e8fc4ae"
   dependencies:
     broccoli-stew "^1.2.0"
     ember-cli-get-component-path-option "^1.0.0"
