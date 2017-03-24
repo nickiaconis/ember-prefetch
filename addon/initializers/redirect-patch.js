@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 let hasInitialized = false;
-let isOuter = true;
-let hasWillTransitioned = false;
+const stack = [];
+let latest = null;
 
 export function initialize() {
   if (!hasInitialized) {
@@ -19,26 +19,31 @@ export function initialize() {
         // replace router's transitionByIntent method, through which all transitions pass
         const oldTransitionByIntent = router.transitionByIntent;
         router.transitionByIntent = function() {
-          const localIsOuter = isOuter;
-          isOuter = false;
+          stack.push(1);
 
           const oldInfos = router.state.handlerInfos;
           const transition = oldTransitionByIntent.apply(router, arguments);
+
+          if (!latest || stack.length >= latest.stackSize) {
+            latest = {
+              oldInfos,
+              transition,
+            };
+          }
+
+          latest.stackSize = stack.length;
 
           // Router.js does not trigger `willTransition` when redirecting. We need
           // `willTransition` to be triggered regardless so that the `prefetch` hook is
           // always invoked for the routes in the new transition. Internally, the
           // `willTransition` hook uses `Ember.run.once` to fire the event, which
           // gurantees that it will not trigger `willTransition` multiple times.
-          if (!hasWillTransitioned && transition) {
-            emberRouter.willTransition(oldInfos, transition.state.handlerInfos, transition);
-            hasWillTransitioned = true;
+          if (stack.length === 1) {
+            emberRouter.willTransition(latest.oldInfos, transition.state.handlerInfos, latest.transition);
+            latest = null;
           }
 
-          if (localIsOuter) {
-            hasWillTransitioned = false;
-            isOuter = true;
-          }
+          stack.pop();
 
           return transition;
         };

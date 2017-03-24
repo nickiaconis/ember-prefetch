@@ -2,11 +2,9 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   queryParams: [
-    'foo',
-    'fib',
-    'fiz',
+    'fix',
+    'fuzz',
   ],
-  foo: null,
-  fib: null,
-  fiz: null,
+  fix: null,
+  fuzz: null,
 });
