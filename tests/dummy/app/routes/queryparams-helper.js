@@ -2,15 +2,20 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   queryParams: {
-    fib: {
+    fix: {
       refreshModel: true,
     },
-    fiz: {
+    fuzz: {
       refreshModel: true,
     },
   },
 
   prefetch() {
-    window.QueryparamsRoute_prefetch_hasRun = (window.QueryparamsRoute_prefetch_hasRun || 0) + 1;
+    this.replaceWith('queryparams', {
+      queryParams: {
+        fib: 'fab',
+        fiz: 'baz',
+      },
+    });
   },
 });
