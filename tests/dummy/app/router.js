@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('foo');
   this.route('bar');
   this.route('queryparams');
+  this.route('queryparams-helper');
 
   this.route('abort-transition-to-child', function() {
     this.route('child');
