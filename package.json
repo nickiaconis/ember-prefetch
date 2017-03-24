@@ -1,6 +1,6 @@
 {
   "name": "ember-prefetch",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "An Ember.js addon for escaping the waterfall.",
   "directories": {
     "doc": "doc",
