@@ -41,7 +41,7 @@
     "ember-source": "2.13.0",
     "ember-sinon": "0.6.0",
     "ember-sinon-qunit": "1.4.1",
-    "loader.js": "4.1.0"
+    "loader.js": "4.4.0"
   },
   "keywords": [
     "ember-addon",
