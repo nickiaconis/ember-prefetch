@@ -40,7 +40,7 @@ export function initialize() {
           // always invoked for the routes in the new transition. Internally, the
           // `willTransition` hook uses `Ember.run.once` to fire the event, which
           // gurantees that it will not trigger `willTransition` multiple times.
-          if (stack.length === 1) {
+          if (stack.length === 1 && transition) {
             emberRouter.willTransition(latest.oldInfos, transition.state.handlerInfos, latest.transition);
             latest = null;
           }
