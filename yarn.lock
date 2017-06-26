@@ -3571,9 +3571,9 @@ livereload-js@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/livereload-js/-/livereload-js-2.2.2.tgz#6c87257e648ab475bc24ea257457edcc1f8d0bc2"
 
-loader.js@4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/loader.js/-/loader.js-4.4.0.tgz#02bf55650b78afee5e9d8cf972efd484faa3b2c1"
+loader.js@4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/loader.js/-/loader.js-4.4.1.tgz#f6a4c3c296170685cb7cd7b3e7aa6d5c846c0518"
 
 lockfile@~1.0.1:
   version "1.0.3"
