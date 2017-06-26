@@ -13,7 +13,9 @@ export function initialize() {
         this._super.apply(this, arguments);
 
         // now this.router is available
-        const router = this.router;
+        // router.router renamed to _routerMicrolib in 2.13
+        // https://emberjs.com/deprecations/v2.x/#toc_ember-router-router-renamed-to-ember-router-_routermicrolib
+        const router = this._routerMicrolib || this.router;
         const emberRouter = this;
 
         // replace router's transitionByIntent method, through which all transitions pass
