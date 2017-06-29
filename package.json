@@ -1,6 +1,6 @@
 {
   "name": "ember-prefetch",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "An Ember.js addon for escaping the waterfall.",
   "directories": {
     "doc": "doc",
@@ -38,9 +38,9 @@
     "ember-export-application-global": "2.0.0",
     "ember-load-initializers": "1.0.0",
     "ember-resolver": "4.1.0",
-    "ember-source": "2.13.3",
     "ember-sinon": "0.7.0",
     "ember-sinon-qunit": "1.6.0",
+    "ember-source": "2.13.3",
     "loader.js": "4.5.1"
   },
   "keywords": [
