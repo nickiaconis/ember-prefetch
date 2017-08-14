@@ -2318,9 +2318,9 @@ ember-sinon@0.7.0, ember-sinon@~0.7.0:
     ember-cli-babel "^5.1.7"
     sinon "^2.1.0"
 
-ember-source@2.13.3:
-  version "2.13.3"
-  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-2.13.3.tgz#7fbf413cceddb71d267502d59162ad2df6e9ff11"
+ember-source@2.13.4:
+  version "2.13.4"
+  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-2.13.4.tgz#97022069febfb5651ddc26a83f1987370cc404c8"
   dependencies:
     "@glimmer/compiler" "^0.22.3"
     "@glimmer/di" "^0.1.8"
@@ -4882,13 +4882,13 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
 
-rsvp@^3.0.14, rsvp@^3.0.16, rsvp@^3.0.18, rsvp@^3.0.21, rsvp@^3.1.0, rsvp@^3.2.1, rsvp@^3.4.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.5.0.tgz#a62c573a4ae4e1dfd0697ebc6242e79c681eaa34"
-
-rsvp@^3.0.17, rsvp@^3.3.3:
+rsvp@^3.0.14, rsvp@^3.0.16, rsvp@^3.0.17, rsvp@^3.0.18, rsvp@^3.0.21, rsvp@^3.1.0, rsvp@^3.2.1, rsvp@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.3.3.tgz#34633caaf8bc66ceff4be3c2e1dffd032538a813"
+
+rsvp@^3.4.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.5.0.tgz#a62c573a4ae4e1dfd0697ebc6242e79c681eaa34"
 
 rsvp@~3.0.6:
   version "3.0.21"
