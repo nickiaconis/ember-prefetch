@@ -1,8 +1,6 @@
 import Ember from 'ember';
 
 let hasInitialized = false;
-const stack = [];
-let latest = null;
 
 export function initialize() {
   if (!hasInitialized) {
@@ -17,6 +15,8 @@ export function initialize() {
         // https://emberjs.com/deprecations/v2.x/#toc_ember-router-router-renamed-to-ember-router-_routermicrolib
         const router = this._routerMicrolib || this.router;
         const emberRouter = this;
+        const stack = [];
+        let latest = null;
 
         // replace router's transitionByIntent method, through which all transitions pass
         const oldTransitionByIntent = router.transitionByIntent;
