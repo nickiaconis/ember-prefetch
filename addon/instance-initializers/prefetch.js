@@ -18,6 +18,11 @@ export function initialize(instance) {
     // resolution order.
     let handlerPromiseChain = Ember.RSVP.resolve();
     transition.handlerInfos.forEach(function(handlerInfo) {
+      // Bail if we're tearing down
+      if ((handlerInfo.handler && handlerInfo.handler.isDestroying === true) || router.isDestroying === true) {
+        return;
+      }
+
       // Don't prefetch handlers above the pivot.
       if (!hasSeenPivot || transition.isAborted) {
         // The pivot is the first common ancestor, so it is skipped as well.
@@ -44,6 +49,9 @@ export function initialize(instance) {
       if (!handlerInfo.handler && handlerInfo.handlerPromise) {
         handlerPromiseChain = handlerPromiseChain.then(() => (
           handlerInfo.handlerPromise.then((handler) => {
+            if (handler.isDestroying === true) {
+              return;
+            }
             handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
           })
         ));
