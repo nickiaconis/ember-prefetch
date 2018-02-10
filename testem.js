@@ -14,7 +14,8 @@ module.exports = {
       '--disable-gpu',
       '--headless',
       '--remote-debugging-port=9222',
-      '--window-size=1440,900'
-    ],
+      '--window-size=1440,900',
+      process.env.TRAVIS ? '--no-sandbox' : null,
+    ].filter(Boolean),
   }
 };
