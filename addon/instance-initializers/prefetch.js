@@ -67,8 +67,9 @@ function runHook(hookName, handlerInfo, transition, args) {
     `runSharedModelHook` was deleted as part of an internal cleanup
     and is now moved to a function much like this one. This detects
     if the `runSharedModelHook` exists or not.
-  */
-  if (handlerInfo.runSharedModelHook === undefined) {
+    */
+   if (handlerInfo.runSharedModelHook === undefined) {
+    // This branch will be taken if the version of router_js is >= 2.0.0.
     if (handlerInfo.handler !== undefined && handlerInfo.handler[hookName] !== undefined) {
       if (handlerInfo.queryParams !== undefined) {
         args.push(handlerInfo.queryParams);
@@ -90,6 +91,7 @@ function runHook(hookName, handlerInfo, transition, args) {
       return Ember.RSVP.resolve(result);
     }
   } else {
+    // This branch will be taken router_js that is < 2.0.0.
     return handlerInfo.runSharedModelHook(transition, hookName, args);
   }
 }
