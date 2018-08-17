@@ -52,14 +52,46 @@ export function initialize(instance) {
             if (handler.isDestroying === true) {
               return;
             }
-            handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
+            handler._prefetched = runHook('prefetch', handlerInfo, transition, [fullParams]);
           })
         ));
       } else {
-        handlerInfo.handler._prefetched = handlerInfo.runSharedModelHook(transition, 'prefetch', [fullParams]);
+        handlerInfo.handler._prefetched = runHook('prefetch', handlerInfo, transition, [fullParams]);
       }
     });
   });
+}
+
+function runHook(hookName, handlerInfo, transition, args) {
+  /*
+    `runSharedModelHook` was deleted as part of an internal cleanup
+    and is now moved to a function much like this one. This detects
+    if the `runSharedModelHook` exists or not.
+  */
+  if (handlerInfo.runSharedModelHook === undefined) {
+    if (handlerInfo.handler !== undefined && handlerInfo.handler[hookName] !== undefined) {
+      if (handlerInfo.queryParams !== undefined) {
+        args.push(handlerInfo.queryParams);
+      }
+
+      args.push(transition);
+
+      let result;
+      if (handlerInfo.handler[`_${hookName}`] !== undefined) {
+        result = handlerInfo.handler[`_${hookName}`](...args);
+      } else if (handlerInfo.handler[hookName] !== undefined) {
+        result = handlerInfo.handler[hookName](...args);
+      }
+
+      if (result !== undefined && result.isTransition) {
+        result = null;
+      }
+
+      return Ember.RSVP.resolve(result);
+    }
+  } else {
+    return handlerInfo.runSharedModelHook(transition, hookName, args);
+  }
 }
 
 export default {
