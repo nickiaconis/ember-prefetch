@@ -41,7 +41,7 @@ export function initialize(instance) {
       // Build fullParams as in unresolved-handler-info-by-param#getModel.
       let fullParams = handlerInfo.params || {};
       if (transition && transition.queryParams) {
-        fullParams = Ember.copy(fullParams);
+        fullParams = Ember.assign(fullParams);
         fullParams.queryParams = transition.queryParams;
       }
 
