@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { copy } from '@ember/object/internals';
+import { resolve } from 'rsvp';
 
 export function initialize(instance) {
   const ROUTER_NAME = 'router:main';
@@ -16,7 +17,7 @@ export function initialize(instance) {
 
     // For asynchronously loaded handlers, we chain them to ensure
     // resolution order.
-    let handlerPromiseChain = Ember.RSVP.resolve();
+    let handlerPromiseChain = resolve();
     transition.handlerInfos.forEach(function(handlerInfo) {
       // Bail if we're tearing down
       if ((handlerInfo.handler && handlerInfo.handler.isDestroying === true) || router.isDestroying === true) {
@@ -41,7 +42,7 @@ export function initialize(instance) {
       // Build fullParams as in unresolved-handler-info-by-param#getModel.
       let fullParams = handlerInfo.params || {};
       if (transition && transition.queryParams) {
-        fullParams = Ember.copy(fullParams);
+        fullParams = copy(fullParams);
         fullParams.queryParams = transition.queryParams;
       }
 
@@ -88,7 +89,7 @@ function runHook(hookName, handlerInfo, transition, args) {
         result = null;
       }
 
-      return Ember.RSVP.resolve(result);
+      return resolve(result);
     }
   } else {
     // This branch will be taken router_js that is < 2.0.0.

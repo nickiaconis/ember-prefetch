@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 import RouteMixin from 'ember-prefetch/mixins/route';
 
 let hasInitialized = false;
@@ -7,7 +7,7 @@ export function initialize() {
   if (!hasInitialized) {
     hasInitialized = true;
 
-    Ember.Route.reopen(RouteMixin);
+    Route.reopen(RouteMixin);
   }
 }
 

@@ -1,6 +1,6 @@
-import Ember from 'ember';
-
-const { Mixin, RSVP, getOwner } = Ember;
+import Mixin from '@ember/object/mixin';
+import RSVP from 'rsvp';
+import { getOwner } from '@ember/application';
 const PREFETCH_NOT_DEFINED = {};
 
 /**
