@@ -2,7 +2,6 @@
 
 This addon provides an implementation of the `prefetch` hook from [Ember RFC #97](https://github.com/emberjs/rfcs/pull/97).
 
-## Installation
 
 * `yarn add ember-prefetch`
 * alternate: `npm install [--save|--save-dev] ember-prefetch`
@@ -56,7 +55,6 @@ Make sure you have Yarn installed. ([How do I install Yarn?](https://yarnpkg.com
 
 * `git clone` this repository
 * `yarn install`
-* `node_modules/bower/bin/bower install`
 
 ## Running Tests
 

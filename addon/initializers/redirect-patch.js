@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import EmberRouter from '@ember/routing/router';
 
 let hasInitialized = false;
 
@@ -6,7 +6,7 @@ export function initialize() {
   if (!hasInitialized) {
     hasInitialized = true;
 
-    Ember.Router.reopen({
+    EmberRouter.reopen({
       _initRouterJs() {
         this._super.apply(this, arguments);
 

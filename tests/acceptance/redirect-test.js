@@ -1,25 +1,23 @@
-import Ember from 'ember';
 import { module, test } from 'qunit';
-import startApp from '../../tests/helpers/start-app';
+import { setupApplicationTest } from 'ember-qunit';
+import { visit, currentURL } from '@ember/test-helpers';
 
-module('Acceptance | redirect', {
-  beforeEach: function() {
-    this.application = startApp();
+module('Acceptance | redirect', function(hooks) {
+  setupApplicationTest(hooks);
+
+  hooks.beforeEach(function() {
     window.BarRoute_prefetch_hasRun = 0;
-  },
+  });
 
-  afterEach: function() {
-    Ember.run(this.application, 'destroy');
+  hooks.afterEach(function() {
     delete window.BarRoute_prefetch_hasRun;
-  },
-});
+  });
 
-test('visiting /foo redirects to /bar and calls bar\'s prefetch hook', function(assert) {
-  assert.expect(2);
+  test('visiting /foo redirects to /bar and calls bar\'s prefetch hook', async function(assert) {
+    assert.expect(2);
 
-  visit('/foo');
+    await visit('/foo');
 
-  andThen(function() {
     assert.equal(currentURL(), '/bar', '/foo redirected to /bar');
     assert.equal(window.BarRoute_prefetch_hasRun, 1, 'bar\'s prefetch hook was invoked');
   });
