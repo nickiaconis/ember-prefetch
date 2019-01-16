@@ -1,4 +1,4 @@
-import { copy } from '@ember/object/internals';
+import { assign } from '@ember/polyfills';
 import { resolve } from 'rsvp';
 
 export function initialize(instance) {
@@ -42,7 +42,7 @@ export function initialize(instance) {
       // Build fullParams as in unresolved-handler-info-by-param#getModel.
       let fullParams = handlerInfo.params || {};
       if (transition && transition.queryParams) {
-        fullParams = copy(fullParams);
+        fullParams = assign({}, fullParams);
         fullParams.queryParams = transition.queryParams;
       }
 
