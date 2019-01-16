@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { module } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { visit, currentURL } from '@ember/test-helpers';
@@ -20,11 +19,15 @@ module('Acceptance | abort-transition', function(hooks) {
   });
 
   test('visiting /abort-transition-to-child/child aborts transition and doesn\'t run additional prefetch hooks', async function(assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     await visit('/');
 
-    await this.router.transitionTo('abort-transition-to-child.child');
+    try {
+      await this.router.transitionTo('abort-transition-to-child.child')
+    } catch (e) {
+      assert.equal(e.message, 'TransitionAborted');
+    }
 
     assert.equal(currentURL(), '/', 'still on index (transition was aborted)');
 

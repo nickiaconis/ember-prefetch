@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, currentURL, currentRouteName } from '@ember/test-helpers';
+import { visit, currentURL, currentRouteName, settled } from '@ember/test-helpers';
 
 const QUERYPARAMS_HELPER_ROUTE_NAME = 'queryparams-helper';
 const QUERYPARAMS_ROUTE_NAME = 'queryparams';
@@ -65,11 +65,17 @@ module('Acceptance | query-params', function(hooks) {
   });
 
   test('transitioning to a route with a query param marked with refreshModel runs the prefetch hook', async function(assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     await visit('/');
 
-    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'baz' } });
+    try {
+      await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'baz' } });
+    } catch (e) {
+      assert.equal(e.message, 'TransitionAborted');
+    }
+
+    await settled();
 
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
@@ -78,16 +84,22 @@ module('Acceptance | query-params', function(hooks) {
   });
 
   test('transitioning to a route with multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     await visit('/');
 
-    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
-      queryParams: {
-        fib: 'fab',
-        fiz: 'baz',
-      },
-    });
+    try {
+      await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
+        queryParams: {
+          fib: 'fab',
+          fiz: 'baz',
+        },
+      });
+    } catch (e) {
+      assert.equal(e.message, 'TransitionAborted');
+    }
+
+    await settled();
 
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
@@ -96,16 +108,22 @@ module('Acceptance | query-params', function(hooks) {
   });
 
   test('transitioning to a route with multiple query params marked with refreshModel that redirects to a route with multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     await visit('/');
 
-    await this.router.transitionTo(QUERYPARAMS_HELPER_ROUTE_NAME, {
-      queryParams: {
-        fix: 'fax',
-        fuzz: 'futz',
-      },
-    });
+    try {
+      await this.router.transitionTo(QUERYPARAMS_HELPER_ROUTE_NAME, {
+        queryParams: {
+          fix: 'fax',
+          fuzz: 'futz',
+        },
+      });
+    } catch (e) {
+      assert.equal(e.message, 'TransitionAborted');
+    }
+
+    await settled();
 
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
