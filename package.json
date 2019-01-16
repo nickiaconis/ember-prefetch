@@ -1,6 +1,6 @@
 {
   "name": "ember-prefetch",
-  "version": "2.1.9",
+  "version": "3.0.0",
   "description": "An Ember.js addon for escaping the waterfall.",
   "scripts": {
     "build": "ember build",
