@@ -4,7 +4,7 @@ import { lte } from 'ember-compatibility-helpers';
 let hasInitialized = false;
 
 export function initialize() {
-  if (lte('3.5.1')) {
+  if (lte('3.5.1')) { // Delete all of this in the Ember 3.8 LTS and rev major
     if (!hasInitialized) {
       hasInitialized = true;
 

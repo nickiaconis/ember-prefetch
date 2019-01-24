@@ -6,6 +6,7 @@ export function initialize(instance) {
   if (gte('3.6.0')) {
     instance.inject('route:application', '__prefetch', 'service:prefetch');
   } else {
+    // Delete all of this in the Ember 3.8 LTS and rev major
     const ROUTER_NAME = 'router:main';
     const router = (typeof instance.lookup === 'function' ? instance.lookup(ROUTER_NAME) : instance.container.lookup(ROUTER_NAME));
 
