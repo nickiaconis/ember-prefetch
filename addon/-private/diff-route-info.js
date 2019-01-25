@@ -8,18 +8,21 @@ export let paramsDiffer;
 export let createPrefetchChangeSet;
 
 if (gte('3.6.0')) {
+  // remove guard for Ember 3.8 LTS and rev major
   function createList(enumerable) { // eslint-disable-line no-inner-declarations
     let out = [];
 
     if (enumerable === null) return out;
 
     enumerable.find(item => {
-      out.push(item)
+      out.push(item);
+      // using `find` to emulate forEach
+      return false;
     });
     return out;
   }
 
-  qpsChanged = function _qpsChanged(from, to) {
+  qpsChanged = function(from, to) {
     let fromQps = Object.keys(from.queryParams).sort();
     let toQps = Object.keys(to.queryParams).sort();
 
@@ -30,7 +33,7 @@ if (gte('3.6.0')) {
     });
   }
 
-  shouldRefreshModel = function _shouldRefreshModel(routeQueryParams, infoQueryParams) {
+  shouldRefreshModel = function(routeQueryParams, infoQueryParams) {
     let routeQPKeys = Object.keys(routeQueryParams);
     let infoQPKeys = Object.keys(infoQueryParams);
     return routeQPKeys.some(key => {
@@ -44,14 +47,13 @@ if (gte('3.6.0')) {
     });
   }
 
-  pathsDiffer = function _pathsDiffer(from, to) {
+  pathsDiffer = function(from, to) {
     return !to.every((info, i) => {
       return info.name === from[i].name;
     })
   }
 
-
-  paramsDiffer = function _paramsDiffer(from, to) {
+  paramsDiffer = function(from, to) {
     return !to.every((info, i) => {
       let _from = from[i];
       let _to = info;
@@ -87,19 +89,19 @@ if (gte('3.6.0')) {
       let info = to[i];
       let route = privateRouter.getRoute(info.name);
       if (route !== undefined && route !== null) {
-        routes.push({ route, fullParms: assign({}, info.params, { queryParams: info.queryParams }) });
+        routes.push({ route, fullParams: assign({}, info.params, { queryParams: info.queryParams }) });
       }
     }
 
     return routes;
   }
 
-  createPrefetchChangeSet = function _createPrefetchChangeSet(privateRouter, transition) {
+  createPrefetchChangeSet = function(privateRouter, transition) {
     let toList = createList(transition.to);
     let fromList = createList(transition.from);
 
     // Paths Changed
-    if (toList.length > fromList.length) {
+    if (toList.length !== fromList.length) {
       return { shouldCall: true, for: getPrefetched(privateRouter, toList) };
     }
 

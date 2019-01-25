@@ -7,6 +7,7 @@ import { gte } from 'ember-compatibility-helpers';
 let PrefetchService;
 
 if (gte('3.6.0')) {
+  // remove guard for Ember 3.8 LTS and rev major
   PrefetchService = Service.extend({
     router: service('router'),
     init() {
@@ -20,16 +21,19 @@ if (gte('3.6.0')) {
         }
 
         schedule('actions', () => {
-          let changeSet = createPrefetchChangeSet(privateRouter, transition);
-          if (changeSet.shouldCall) {
-            for (let i = 0; i < changeSet.for.length; i++) {
-              let { route, fullParms } = changeSet.for[i];
-              if (seenRoutes.has(route)) continue;
+          if (!this.isDestroying && !this.isDestroyed) {
+            let changeSet = createPrefetchChangeSet(privateRouter, transition);
+            if (changeSet.shouldCall) {
+              for (let i = 0; i < changeSet.for.length; i++) {
+                let { route, fullParams } = changeSet.for[i];
+                if (seenRoutes.has(route)) continue;
 
-                let result = route.prefetch(fullParms, transition);
-                route._prefetched = RSVP.resolve(result);
-                seenRoutes.set(route, true);
-                if (transition.isAborted) return;
+                  route._prefetched = new RSVP.Promise(r => {
+                    return r(route.prefetch(fullParams, transition))
+                  });
+                  seenRoutes.set(route, true);
+                  if (transition.isAborted) return;
+              }
             }
           }
         });
