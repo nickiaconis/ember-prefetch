@@ -8,7 +8,7 @@ export function initialize(instance) {
   } else {
     // Delete all of this in the Ember 3.8 LTS and rev major
     const ROUTER_NAME = 'router:main';
-    const router = (typeof instance.lookup === 'function' ? instance.lookup(ROUTER_NAME) : instance.container.lookup(ROUTER_NAME));
+    const router =instance.lookup(ROUTER_NAME);
 
     router.on('willTransition', function(transition) {
       if (!transition.handlerInfos) {
