@@ -12,7 +12,6 @@ if (gte('3.6.0')) {
     router: service('router'),
     init() {
       this._super(...arguments);
-      let privateRouter = this.router._router._routerMicrolib;
       let seenRoutes = new WeakMap();
 
       this.router.on('routeWillChange', transition => {
@@ -22,6 +21,7 @@ if (gte('3.6.0')) {
 
         schedule('actions', () => {
           if (!this.isDestroying && !this.isDestroyed) {
+            let privateRouter = this.router._router._routerMicrolib;
             let changeSet = createPrefetchChangeSet(privateRouter, transition);
             if (changeSet.shouldCall) {
               for (let i = 0; i < changeSet.for.length; i++) {
