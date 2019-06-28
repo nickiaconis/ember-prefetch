@@ -1,4 +1,4 @@
-import { paramsDiffer, pathsDiffer, qpsChanged, shouldRefreshModel } from 'ember-prefetch/-private/diff-route-info';
+import { paramsDiffer, pathsDiffer, diffQPs, shouldRefreshModel } from 'ember-prefetch/-private/diff-route-info';
 import { module, test } from 'qunit';
 import { assign } from '@ember/polyfills';
 import { gte } from 'ember-compatibility-helpers';
@@ -126,12 +126,12 @@ if (gte('3.6.0')) {
     });
   });
 
-  module('qpsChanged', () => {
-    test('returns false if query params have not changed', (assert) => {
+  module('diffQPs', () => {
+    test('returns empty diff if query params have not changed', (assert) => {
       let info = {
         queryParams: { a: 'b', c: 'd' }
       };
-      assert.notOk(qpsChanged(info, info))
+      assert.equal(diffQPs(info, info).length, 0);
     });
 
     test('returns true if the query params have been removed', (assert) => {
@@ -141,7 +141,7 @@ if (gte('3.6.0')) {
       let info2 = {
         queryParams: { a: 'b' }
       };
-      assert.ok(qpsChanged(info, info2))
+      assert.deepEqual(diffQPs(info, info2), ['c']);
     });
 
     test('returns true if the query params have changed', (assert) => {
@@ -151,7 +151,7 @@ if (gte('3.6.0')) {
       let info2 = {
         queryParams: { a: 'b', c: 'true' }
       };
-      assert.ok(qpsChanged(info, info2))
+      assert.deepEqual(diffQPs(info, info2), ['c']);
     });
 
     test('returns true query params have been added', (assert) => {
@@ -161,7 +161,7 @@ if (gte('3.6.0')) {
       let info2 = {
         queryParams: { a: 'b', c: 'd', e: 'f' }
       };
-      assert.ok(qpsChanged(info, info2))
+      assert.deepEqual(diffQPs(info, info2), ['e']);
     });
 
     test('returns true query params have been completely removed', (assert) => {
@@ -171,7 +171,7 @@ if (gte('3.6.0')) {
       let info2 = {
         queryParams: {}
       };
-      assert.ok(qpsChanged(info, info2))
+      assert.deepEqual(diffQPs(info, info2), ['a', 'c']);
     });
   });
 
@@ -180,40 +180,77 @@ if (gte('3.6.0')) {
       let routeQp = {
         foo: { refreshModel: true }
       };
-      let queryParams = {
-        foo: 'bar'
-      }
-      assert.ok(shouldRefreshModel(routeQp, queryParams))
+      let from = {
+        queryParams: {
+          foo: 'bar'
+        }
+      };
+      let to = {
+        queryParams: {}
+      };
+      assert.ok(shouldRefreshModel(routeQp, diffQPs(from, to)))
     });
 
     test('returns false if refreshModel isnt set', (assert) => {
       let routeQp = {};
-      let queryParams = {
-        foo: 'bar'
-      }
-      assert.notOk(shouldRefreshModel(routeQp, queryParams))
+      let from = {
+        queryParams: {
+          foo: 'bar'
+        }
+      };
+      let to = {
+        queryParams: {}
+      };
+      assert.notOk(shouldRefreshModel(routeQp, diffQPs(from, to)))
     });
 
     test('returns false if refreshModel isnt set for a given qp', (assert) => {
       let routeQp = {
         bar: { refreshModel: true }
       };
-      let queryParams = {
-        foo: 'bar'
-      }
-      assert.notOk(shouldRefreshModel(routeQp, queryParams))
+      let from = {
+        queryParams: {
+          foo: 'bar'
+        }
+      };
+      let to = {
+        queryParams: {}
+      };
+      assert.notOk(shouldRefreshModel(routeQp, diffQPs(from, to)))
     });
 
     test('returns true if refreshModel is set for any qp', (assert) => {
       let routeQp = {
         bar: { refreshModel: true }
       };
-      let queryParams = {
-        foo: 'bar',
-        biz: 'baz',
-        bar: 'woot'
-      }
-      assert.ok(shouldRefreshModel(routeQp, queryParams))
+      let from = {
+        queryParams: {
+          foo: 'bar',
+          biz: 'baz',
+          bar: 'woot'
+        }
+      };
+      let to = {
+        queryParams: {}
+      };
+      assert.ok(shouldRefreshModel(routeQp, diffQPs(from, to)))
+    });
+
+    test('returns false if refreshModel is not set up for diff QPs', (assert) => {
+      let routeQp = {
+        bar: { refreshModel: true }
+      };
+      let from = {
+        queryParams: {
+          bar: 'woot'
+        }
+      };
+      let to = {
+        queryParams: {
+          bar: 'woot'
+        }
+      };
+      assert.notOk(shouldRefreshModel(routeQp, diffQPs(from, to)))
     });
   });
 }

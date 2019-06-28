@@ -1,7 +1,7 @@
 import { assign } from '@ember/polyfills';
 import { gte } from 'ember-compatibility-helpers';
 
-export let qpsChanged;
+export let diffQPs;
 export let shouldRefreshModel;
 export let pathsDiffer;
 export let paramsDiffer;
@@ -22,22 +22,26 @@ if (gte('3.6.0')) {
     return out;
   }
 
-  qpsChanged = function(from, to) {
-    let fromQps = Object.keys(from.queryParams).sort();
-    let toQps = Object.keys(to.queryParams).sort();
+  diffQPs = function(from, to) {
+    let diff = {};
+    let params = [
+      ...Object.keys(from.queryParams),
+      ...Object.keys(to.queryParams)
+    ];
 
-    if (fromQps.length !== toQps.length) return true;
+    for (let param of params) {
+      if (from.queryParams[param] !== to.queryParams[param]) {
+        diff[param] = true;
+      }
+    }
 
-    return !toQps.every((qp, i)=> {
-      return fromQps[i] === qp && to.queryParams[qp] === from.queryParams[qp];
-    });
+    return Object.keys(diff);
   }
 
-  shouldRefreshModel = function(routeQueryParams, infoQueryParams) {
+  shouldRefreshModel = function(routeQueryParams, changedQPs) {
     let routeQPKeys = Object.keys(routeQueryParams);
-    let infoQPKeys = Object.keys(infoQueryParams);
     return routeQPKeys.some(key => {
-      return routeQueryParams[key].refreshModel && infoQPKeys.indexOf(key) > -1;
+      return routeQueryParams[key].refreshModel && changedQPs.indexOf(key) > -1;
     });
   }
 
@@ -67,12 +71,14 @@ if (gte('3.6.0')) {
       return { shouldCall: true, for: routes };
     }
 
-    if (qpsChanged(transition.from, transition.to)) {
+    let diff = diffQPs(transition.from, transition.to);
+
+    if (diff.length > 0) {
       let prefetchRoutes = [];
 
       routes.forEach((info) => {
         let { route } = info;
-        if (shouldRefreshModel(route.queryParams, transition.to.queryParams)) {
+        if (shouldRefreshModel(route.queryParams, diff)) {
           prefetchRoutes.push(info);
         }
       });
