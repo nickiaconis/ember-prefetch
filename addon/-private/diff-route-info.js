@@ -52,17 +52,34 @@ if (gte('3.6.0')) {
   }
 
   pathsDiffer = function(from, to) {
-    return !to.every((info, i) => {
-      return info.name === from[i].name;
-    })
+    let pivotIndex = -1;
+    let mismatch = false;
+    for (let i = 0; i < to.length; i++) {
+      let info = to[i];
+      if (info.name !== from[i].name) {
+        pivotIndex = i;
+        mismatch = true;
+        break;
+      }
+    }
+
+    return [mismatch, pivotIndex];
   }
 
   paramsDiffer = function(from, to) {
-    return !to.every((info, i) => {
+    let pivotIndex = -1;
+    let mismatch = false;
+    for (let i = 0; i < to.length; i++) {
+      let info = to[i];
       let _from = from[i];
-      let _to = info;
-      return _to.paramNames.length === _from.paramNames.length && paramsMatch(_from, _to)
-    });
+      if (info.paramNames.length !== _from.paramNames.length || !paramsMatch(_from, info)) {
+        pivotIndex = i;
+        mismatch = true;
+        break;
+      }
+    }
+
+    return [mismatch, pivotIndex];
   }
 
   function qpsDiffer(privateRouter, to, transition) { // eslint-disable-line no-inner-declarations
@@ -111,13 +128,25 @@ if (gte('3.6.0')) {
       return { shouldCall: true, for: getPrefetched(privateRouter, toList) };
     }
 
-    if (pathsDiffer(fromList, toList)) {
-      return { shouldCall: true, for: getPrefetched(privateRouter, toList) };
+    let pathResult = pathsDiffer(fromList, toList);
+
+    let [_pathsDiffer] = pathResult;
+
+
+    if (_pathsDiffer) {
+      let [, pivot] = pathResult;
+      let pivotHandlers = toList.splice(pivot, toList.length);
+      return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
     }
 
+    let paramsResult = paramsDiffer(fromList, toList);
+    let [_paramsDiffer] = paramsResult;
+
     // Params Changed
-    if (paramsDiffer(fromList, toList)) {
-      return { shouldCall: true, for: getPrefetched(privateRouter, toList) };
+    if (_paramsDiffer) {
+      let [, pivot] = paramsResult;
+      let pivotHandlers = toList.splice(pivot, toList.length);
+      return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
     }
 
     // Query Params changed

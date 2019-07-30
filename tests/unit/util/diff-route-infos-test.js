@@ -10,7 +10,9 @@ if (gte('3.6.0')) {
         paramNames: ['post_id', 'comment_id'],
         params: { post_id: '1', comment_id: '1' }
       };
-      assert.notOk(paramsDiffer([info], [info]))
+      let [match] = paramsDiffer([info], [info]);
+
+      assert.notOk(match);
     });
 
     test('returns true if the params mismatch', (assert) => {
@@ -19,7 +21,8 @@ if (gte('3.6.0')) {
         params: { post_id: '1', comment_id: '1' }
       };
       let info2 = assign({}, info, { params: { post_id: '2' } });
-      assert.ok(paramsDiffer([info], [info2]))
+      let [match] = paramsDiffer([info], [info2]);
+      assert.ok(match);
     });
 
     test('returns true if the paramNames mismatch', (assert) => {
@@ -28,7 +31,8 @@ if (gte('3.6.0')) {
         params: { post_id: '1', comment_id: '1' }
       };
       let info2 = assign({}, info, { paramNames: ['picture_id', 'comment_id'] });
-      assert.ok(paramsDiffer([info], [info2]))
+      let [match] = paramsDiffer([info], [info2]);
+      assert.ok(match)
     });
 
     test('returns true if paramNames are empty', (assert) => {
@@ -37,7 +41,8 @@ if (gte('3.6.0')) {
         params: { post_id: '1', comment_id: '1' }
       };
       let info2 = assign({}, info, { paramNames: [] });
-      assert.ok(paramsDiffer([info], [info2]))
+      let [match] = paramsDiffer([info], [info2]);
+      assert.ok(match);
     });
 
     test('returns true if params are empty', (assert) => {
@@ -46,7 +51,8 @@ if (gte('3.6.0')) {
         params: { post_id: '1', comment_id: '1' }
       };
       let info2 = assign({}, info, { params: {} });
-      assert.ok(paramsDiffer([info], [info2]))
+      let [match] = paramsDiffer([info], [info2]);
+      assert.ok(match);
     });
 
     test('smoke test (different)', (assert) => {
@@ -64,8 +70,8 @@ if (gte('3.6.0')) {
           params: [{ [`${i}*`]: 'bar' }]
         });
       }
-
-      assert.ok(paramsDiffer(infos1, infos2));
+      let [match] = paramsDiffer(infos1, infos2);
+      assert.ok(match);
     });
 
     test('smoke test (same)', (assert) => {
@@ -80,8 +86,8 @@ if (gte('3.6.0')) {
         infos1.push(info);
         infos2.push(info);
       }
-
-      assert.notOk(paramsDiffer(infos1, infos2));
+      let [match] = paramsDiffer(infos1, infos2);
+      assert.notOk(match);
     });
   });
 
@@ -90,7 +96,8 @@ if (gte('3.6.0')) {
       let info = {
         name: 'foo.bar'
       };
-      assert.notOk(pathsDiffer([info], [info]))
+      let [match] = pathsDiffer([info], [info]);
+      assert.notOk(match)
     });
 
     test('returns true if the paths changed', (assert) => {
@@ -98,7 +105,8 @@ if (gte('3.6.0')) {
         name: 'foo.bar'
       };
       let info2 = assign({}, info, { name: 'baz.bar' });
-      assert.ok(pathsDiffer([info], [info2]))
+      let [match] = pathsDiffer([info], [info2]);
+      assert.ok(match)
     });
 
     test('returns true if the paths changed', (assert) => {
@@ -106,7 +114,8 @@ if (gte('3.6.0')) {
         name: 'foo.bar'
       };
       let info2 = assign({}, info, { name: 'baz.bar' });
-      assert.ok(pathsDiffer([info], [info2]))
+      let [match] = pathsDiffer([info], [info2]);
+      assert.ok(match);
     });
 
     test('returns true if the paths mismatch', (assert) => {
@@ -122,7 +131,8 @@ if (gte('3.6.0')) {
           name: i % 2 ? `${i}` : `index`
         });
       }
-      assert.ok(pathsDiffer(infos1, infos2))
+      let [match] = pathsDiffer(infos1, infos2);
+      assert.ok(match)
     });
   });
 
