@@ -7,6 +7,18 @@ module('Route hooks', function(hooks) {
   setupApplicationTest(hooks);
 
   hooks.beforeEach(function(assert) {
+    this.owner.register('route:application', Route.extend({
+      prefetch() {
+        assert.step('application');
+      }
+    }));
+
+    this.owner.register('route:foo', Route.extend({
+      prefetch() {
+        assert.step('foo');
+      }
+    }));
+
     this.owner.register('route:parent', Route.extend({
       prefetch() {
         assert.step('parent');
@@ -32,6 +44,30 @@ module('Route hooks', function(hooks) {
     await this.owner.lookup('service:router').transitionTo('/parent/sibling');
 
     assert.verifySteps([
+      'application',
+      'parent',
+      'child',
+      'sibling'
+    ]);
+  });
+
+  test('hook counts for child routes', async function(assert) {
+    await visit('/parent/child');
+
+    await this.owner.lookup('service:router').transitionTo('/parent/sibling');
+
+    await this.owner.lookup('service:router').transitionTo('/foo');
+
+    await this.owner.lookup('service:router').transitionTo('/parent/child');
+
+    await this.owner.lookup('service:router').transitionTo('/parent/sibling');
+
+    assert.verifySteps([
+      'application',
+      'parent',
+      'child',
+      'sibling',
+      'foo',
       'parent',
       'child',
       'sibling'

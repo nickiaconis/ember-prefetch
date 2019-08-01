@@ -123,15 +123,13 @@ if (gte('3.6.0')) {
     let toList = createList(transition.to);
     let fromList = createList(transition.from);
 
-    // Paths Changed
-    if (toList.length !== fromList.length) {
+    if (fromList.length === 0) {
       return { shouldCall: true, for: getPrefetched(privateRouter, toList) };
     }
 
     let pathResult = pathsDiffer(fromList, toList);
 
     let [_pathsDiffer] = pathResult;
-
 
     if (_pathsDiffer) {
       let [, pivot] = pathResult;
