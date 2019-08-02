@@ -11,6 +11,9 @@ Router.map(function() {
   this.route('bar');
   this.route('queryparams');
   this.route('queryparams-helper');
+  this.route('queryparams-children', { path: '/qp' }, function() {
+    this.route('child');
+  });
 
   this.route('parent', function() {
     this.route('child');
