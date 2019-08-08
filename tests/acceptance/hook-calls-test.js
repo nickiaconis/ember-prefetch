@@ -201,4 +201,26 @@ module('Route hooks', function(hooks) {
       'child'
     ]);
   });
+
+  test('hook counts param change', async function(assert) {
+    this.owner.register('route:profile', Route.extend({
+      prefetch({ id }) {
+        assert.step(`profile-${id}`);
+        return id;
+      }
+    }));
+    await visit('/profile/1');
+
+    assert.equal(document.getElementById('heading').textContent, '1');
+
+    await this.owner.lookup('service:router').transitionTo('/profile/2');
+
+    assert.equal(document.getElementById('heading').textContent, '2');
+
+    assert.verifySteps([
+      'application',
+      'profile-1',
+      'profile-2'
+    ]);
+  });
 });

@@ -15,6 +15,8 @@ Router.map(function() {
     this.route('child');
   });
 
+  this.route('profile', { path: '/profile/:id' });
+
   this.route('parent', function() {
     this.route('child');
     this.route('sibling');
