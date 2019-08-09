@@ -69,6 +69,11 @@ if (gte('3.6.0')) {
   paramsDiffer = function(from, to) {
     let pivotIndex = -1;
     let mismatch = false;
+
+    if (from.length !== to.length) {
+      return [mismatch, pivotIndex];
+    }
+
     for (let i = 0; i < to.length; i++) {
       let info = to[i];
       let _from = from[i];
@@ -127,22 +132,22 @@ if (gte('3.6.0')) {
       return { shouldCall: true, for: getPrefetched(privateRouter, toList) };
     }
 
-    let pathResult = pathsDiffer(fromList, toList);
-
-    let [_pathsDiffer] = pathResult;
-
-    if (_pathsDiffer) {
-      let [, pivot] = pathResult;
-      let pivotHandlers = toList.splice(pivot, toList.length);
-      return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
-    }
-
     let paramsResult = paramsDiffer(fromList, toList);
     let [_paramsDiffer] = paramsResult;
 
     // Params Changed
     if (_paramsDiffer) {
       let [, pivot] = paramsResult;
+      let pivotHandlers = toList.splice(pivot, toList.length);
+      return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
+    }
+
+    let pathResult = pathsDiffer(fromList, toList);
+
+    let [_pathsDiffer] = pathResult;
+
+    if (_pathsDiffer) {
+      let [, pivot] = pathResult;
       let pivotHandlers = toList.splice(pivot, toList.length);
       return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
     }

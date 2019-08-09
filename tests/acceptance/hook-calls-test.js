@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, currentURL } from '@ember/test-helpers';
+import { visit, currentURL, click } from '@ember/test-helpers';
 import Route from '@ember/routing/route';
 import Controller from '@ember/controller';
 import { gte } from 'ember-compatibility-helpers';
@@ -209,18 +209,79 @@ module('Route hooks', function(hooks) {
         return id;
       }
     }));
-    await visit('/profile/1');
+
+    this.owner.register('route:profile.view', Route.extend({
+      prefetch(_, transition) {
+        let id;
+        if (transition.to) {
+          id = transition.to.parent.params.id;
+        } else {
+          id = transition.params.profile.id;
+        }
+        assert.step(`profile-view-${id}`);
+        return id;
+      },
+    }));
+
+    this.owner.register('route:feed', Route.extend({
+      prefetch({ id }) {
+        assert.step(`feed-${id}`);
+        return id;
+      }
+    }));
+
+    this.owner.register('route:feed.view', Route.extend({
+      prefetch(_, transition) {
+        let id;
+        if (transition.to) {
+          id = transition.to.parent.params.id;
+        } else {
+          id = transition.params.feed.id;
+        }
+        assert.step(`feed-view-${id}`);
+        return id;
+      },
+    }));
+
+    await visit('/profile/1/view');
 
     assert.equal(document.getElementById('heading').textContent, '1');
+    assert.equal(document.getElementById('view-heading').textContent, '1');
 
-    await this.owner.lookup('service:router').transitionTo('/profile/2');
+    await click('#p4');
 
     assert.equal(document.getElementById('heading').textContent, '2');
+
+    await click('#p2');
+
+    assert.equal(document.getElementById('view-heading').textContent, '2');
+
+    await click('#p1');
+
+    assert.equal(document.getElementById('heading').textContent, '1');
+    assert.equal(document.getElementById('view-heading').textContent, '1');
+
+    await click('#p3');
+
+    await click('#f2');
+
+    await click('#p1');
+
+    await click('#f1')
 
     assert.verifySteps([
       'application',
       'profile-1',
-      'profile-2'
+      'profile-view-1',
+      'profile-2',
+      'profile-view-2',
+      'profile-1',
+      'profile-view-1',
+      'feed-2',
+      'feed-view-2',
+      'profile-1',
+      'profile-view-1',
+      'feed-1'
     ]);
   });
 });
