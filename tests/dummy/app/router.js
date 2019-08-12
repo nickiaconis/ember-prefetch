@@ -15,6 +15,14 @@ Router.map(function() {
     this.route('child');
   });
 
+  this.route('profile', { path: '/profile/:id' }, function() {
+    this.route('view');
+  });
+
+  this.route('feed', { path: '/feed/:id' }, function() {
+    this.route('view');
+  });
+
   this.route('parent', function() {
     this.route('child');
     this.route('sibling');
