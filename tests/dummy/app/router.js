@@ -31,6 +31,7 @@ Router.map(function() {
   this.route('abort-transition-to-child', function() {
     this.route('child');
   });
+  this.mount('lazy-engine');
 });
 
 export default Router;
