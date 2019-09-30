@@ -26,7 +26,11 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?foo=bar', 'the query param is set');
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was invoked');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      "queryparams' prefetch hook was invoked"
+    );
   });
 
   test('loading a route with a query param marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -37,7 +41,11 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was invoked');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      "queryparams' prefetch hook was invoked"
+    );
   });
 
   test('loading a route with multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -48,7 +56,11 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fib=fab&fiz=baz', 'the query params are set');
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'queryparams\' prefetch hook was invoked');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      "queryparams' prefetch hook was invoked"
+    );
   });
 
   test('transitioning to a route with a query param runs the prefetch hook', async function(assert) {
@@ -136,7 +148,11 @@ module('Acceptance | query-params', function(hooks) {
 
     await visit(`${QUERYPARAMS_ROUTE_URL}`);
 
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      'the prefetch hook was run for the initial transition'
+    );
 
     await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { foo: 'bar' } });
 
@@ -146,20 +162,30 @@ module('Acceptance | query-params', function(hooks) {
     assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was not run again');
   });
 
-  test('changing a query param does not run the prefetch hook (when other queryParams are set)', async function (assert) {
+  test('changing a query param does not run the prefetch hook (when other queryParams are set)', async function(assert) {
     assert.expect(4);
 
     await visit(`${QUERYPARAMS_ROUTE_URL}`);
 
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      'the prefetch hook was run for the initial transition'
+    );
 
     await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'biz' } });
-    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'biz', foo: 'bar' } });
+    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
+      queryParams: { fiz: 'biz', foo: 'bar' },
+    });
 
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fiz=biz&foo=bar', 'the query params are set');
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 2, 'the prefetch hook was only run twice');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      2,
+      'the prefetch hook was only run twice'
+    );
   });
 
   test('changing a query param marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -167,9 +193,15 @@ module('Acceptance | query-params', function(hooks) {
 
     await visit(`${QUERYPARAMS_ROUTE_URL}`);
 
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      'the prefetch hook was run for the initial transition'
+    );
 
-    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'baz', foo: null } });
+    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
+      queryParams: { fiz: 'baz', foo: null },
+    });
 
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
@@ -182,7 +214,11 @@ module('Acceptance | query-params', function(hooks) {
 
     await visit(`${QUERYPARAMS_ROUTE_URL}`);
 
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      'the prefetch hook was run for the initial transition'
+    );
 
     await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
       queryParams: {
@@ -198,15 +234,23 @@ module('Acceptance | query-params', function(hooks) {
     assert.equal(window.QueryparamsRoute_prefetch_hasRun, 2, 'the prefetch hook was run again');
   });
 
-  test('removing a query param marked with refreshModel runs the prefetch hook', async function (assert) {
+  test('removing a query param marked with refreshModel runs the prefetch hook', async function(assert) {
     assert.expect(4);
 
     await visit(`${QUERYPARAMS_ROUTE_URL}`);
 
-    assert.equal(window.QueryparamsRoute_prefetch_hasRun, 1, 'the prefetch hook was run for the initial transition');
+    assert.equal(
+      window.QueryparamsRoute_prefetch_hasRun,
+      1,
+      'the prefetch hook was run for the initial transition'
+    );
 
-    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: 'baz', foo: null } });
-    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, { queryParams: { fiz: null, foo: null } });
+    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
+      queryParams: { fiz: 'baz', foo: null },
+    });
+    await this.router.transitionTo(QUERYPARAMS_ROUTE_NAME, {
+      queryParams: { fiz: null, foo: null },
+    });
 
     const url = currentURL();
     assert.equal(currentRouteName(), QUERYPARAMS_ROUTE_NAME, 'the desired route is reached');
