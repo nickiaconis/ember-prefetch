@@ -9,7 +9,8 @@ export let createPrefetchChangeSet;
 
 if (gte('3.6.0')) {
   // remove guard for Ember 3.8 LTS and rev major
-  function createList(enumerable) { // eslint-disable-line no-inner-declarations
+  // eslint-disable-next-line no-inner-declarations
+  function createList(enumerable) {
     let out = [];
 
     if (enumerable === null) return out;
@@ -24,10 +25,7 @@ if (gte('3.6.0')) {
 
   diffQPs = function(from, to) {
     let diff = {};
-    let params = [
-      ...Object.keys(from.queryParams),
-      ...Object.keys(to.queryParams)
-    ];
+    let params = [...Object.keys(from.queryParams), ...Object.keys(to.queryParams)];
 
     for (let param of params) {
       if (from.queryParams[param] !== to.queryParams[param]) {
@@ -36,16 +34,17 @@ if (gte('3.6.0')) {
     }
 
     return Object.keys(diff);
-  }
+  };
 
   shouldRefreshModel = function(routeQueryParams, changedQPs) {
     let routeQPKeys = Object.keys(routeQueryParams);
     return routeQPKeys.some(key => {
       return routeQueryParams[key].refreshModel && changedQPs.indexOf(key) > -1;
     });
-  }
+  };
 
-  function paramsMatch(from, to) { // eslint-disable-line no-inner-declarations
+  // eslint-disable-next-line no-inner-declarations
+  function paramsMatch(from, to) {
     return to.paramNames.every((paramName, i) => {
       return from.paramNames[i] === paramName && from.params[paramName] === to.params[paramName];
     });
@@ -64,7 +63,7 @@ if (gte('3.6.0')) {
     }
 
     return [mismatch, pivotIndex];
-  }
+  };
 
   paramsDiffer = function(from, to) {
     let pivotIndex = -1;
@@ -85,9 +84,10 @@ if (gte('3.6.0')) {
     }
 
     return [mismatch, pivotIndex];
-  }
+  };
 
-  function qpsDiffer(privateRouter, to, transition) { // eslint-disable-line no-inner-declarations
+  // eslint-disable-next-line no-inner-declarations
+  function qpsDiffer(privateRouter, to, transition) {
     let routes = getPrefetched(privateRouter, to);
     if (transition.from === null) {
       return { shouldCall: true, for: routes };
@@ -98,7 +98,7 @@ if (gte('3.6.0')) {
     if (diff.length > 0) {
       let prefetchRoutes = [];
 
-      routes.forEach((info) => {
+      routes.forEach(info => {
         let { route } = info;
         if (shouldRefreshModel(route.queryParams, diff)) {
           prefetchRoutes.push(info);
@@ -111,13 +111,17 @@ if (gte('3.6.0')) {
     return { shouldCall: false, for: [] };
   }
 
-  function getPrefetched(privateRouter, to) { // eslint-disable-line no-inner-declarations
+  // eslint-disable-next-line no-inner-declarations
+  function getPrefetched(privateRouter, to) {
     let routes = [];
     for (let i = 0; i < to.length; i++) {
       let info = to[i];
       let route = privateRouter.getRoute(info.name);
       if (route !== undefined && route !== null) {
-        routes.push({ route, fullParams: assign({}, info.params, { queryParams: info.queryParams }) });
+        routes.push({
+          route,
+          fullParams: assign({}, info.params, { queryParams: info.queryParams }),
+        });
       }
     }
 
@@ -154,5 +158,5 @@ if (gte('3.6.0')) {
 
     // Query Params changed
     return qpsDiffer(privateRouter, toList, transition);
-  }
+  };
 }

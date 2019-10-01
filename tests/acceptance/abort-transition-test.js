@@ -18,13 +18,13 @@ module('Acceptance | abort-transition', function(hooks) {
     delete window.AbortTransitionToChild_Child_prefetch_count;
   });
 
-  test('visiting /abort-transition-to-child/child aborts transition and doesn\'t run additional prefetch hooks', async function(assert) {
+  test("visiting /abort-transition-to-child/child aborts transition and doesn't run additional prefetch hooks", async function(assert) {
     assert.expect(4);
 
     await visit('/');
 
     try {
-      await this.router.transitionTo('abort-transition-to-child.child')
+      await this.router.transitionTo('abort-transition-to-child.child');
     } catch (e) {
       assert.equal(e.message, 'TransitionAborted');
     }
@@ -32,6 +32,10 @@ module('Acceptance | abort-transition', function(hooks) {
     assert.equal(currentURL(), '/', 'still on index (transition was aborted)');
 
     assert.equal(window.AbortTransitionToChild_prefetch_count, 1, 'parent prefetch called');
-    assert.equal(window.AbortTransitionToChild_Child_prefetch_count, 0, 'child prefetch not called');
+    assert.equal(
+      window.AbortTransitionToChild_Child_prefetch_count,
+      0,
+      'child prefetch not called'
+    );
   });
 });

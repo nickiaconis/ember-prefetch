@@ -7,7 +7,6 @@ import { module } from 'qunit';
 import test from 'ember-sinon-qunit/test-support/test';
 import { lte } from 'ember-compatibility-helpers';
 
-
 if (lte('3.5.1')) {
   var registry, application;
 
@@ -28,7 +27,7 @@ if (lte('3.5.1')) {
       });
     });
 
-    test('an Ember#Route\'s default model hook returns its prefetched property', function(assert) {
+    test("an Ember#Route's default model hook returns its prefetched property", function(assert) {
       assert.expect(1);
 
       initialize(registry, application);
@@ -36,7 +35,7 @@ if (lte('3.5.1')) {
       const data = {};
       const route = Route.create({ _prefetched: EmberPromise.resolve(data) });
 
-      return route.model().then((model) => {
+      return route.model().then(model => {
         assert.equal(model, data, 'the model hook returns prefetched');
       });
     });

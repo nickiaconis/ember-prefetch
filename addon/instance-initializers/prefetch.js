@@ -8,7 +8,7 @@ export function initialize(instance) {
   } else {
     // Delete all of this in the Ember 3.8 LTS and rev major
     const ROUTER_NAME = 'router:main';
-    const router =instance.lookup(ROUTER_NAME);
+    const router = instance.lookup(ROUTER_NAME);
 
     router.on('willTransition', function(transition) {
       if (!transition.handlerInfos) {
@@ -25,7 +25,10 @@ export function initialize(instance) {
       let handlerPromiseChain = resolve();
       transition.handlerInfos.forEach(function(handlerInfo) {
         // Bail if we're tearing down
-        if ((handlerInfo.handler && handlerInfo.handler.isDestroying === true) || router.isDestroying === true) {
+        if (
+          (handlerInfo.handler && handlerInfo.handler.isDestroying === true) ||
+          router.isDestroying === true
+        ) {
           return;
         }
 
@@ -53,27 +56,30 @@ export function initialize(instance) {
 
         // Run the prefetch hook if the route has one.
         if (!handlerInfo.handler && handlerInfo.handlerPromise) {
-          handlerPromiseChain = handlerPromiseChain.then(() => (
-            handlerInfo.handlerPromise.then((handler) => {
+          handlerPromiseChain = handlerPromiseChain.then(() =>
+            handlerInfo.handlerPromise.then(handler => {
               if (handler.isDestroying === true) {
                 return;
               }
               handler._prefetched = runHook('prefetch', handlerInfo, transition, [fullParams]);
             })
-          ));
+          );
         } else {
-          handlerInfo.handler._prefetched = runHook('prefetch', handlerInfo, transition, [fullParams]);
+          handlerInfo.handler._prefetched = runHook('prefetch', handlerInfo, transition, [
+            fullParams,
+          ]);
         }
       });
     });
 
-    function runHook(hookName, handlerInfo, transition, args) { // eslint-disable-line no-inner-declarations
+    // eslint-disable-next-line no-inner-declarations
+    function runHook(hookName, handlerInfo, transition, args) {
       /*
         `runSharedModelHook` was deleted as part of an internal cleanup
         and is now moved to a function much like this one. This detects
         if the `runSharedModelHook` exists or not.
         */
-       if (handlerInfo.runSharedModelHook === undefined) {
+      if (handlerInfo.runSharedModelHook === undefined) {
         // This branch will be taken if the version of router_js is >= 2.0.0.
         if (handlerInfo.handler !== undefined && handlerInfo.handler[hookName] !== undefined) {
           if (handlerInfo.queryParams !== undefined) {
@@ -105,5 +111,5 @@ export function initialize(instance) {
 
 export default {
   name: 'prefetch',
-  initialize
+  initialize,
 };

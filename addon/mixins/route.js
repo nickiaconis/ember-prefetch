@@ -66,7 +66,7 @@ export default Mixin.create({
       return _super.call(this, ...arguments);
     }
 
-    return prefetched.then((value) => {
+    return prefetched.then(value => {
       // If a prefetch hook is not defined, the default model hook is used.
       if (value === PREFETCH_NOT_DEFINED) {
         return _super.call(this, ...arguments);

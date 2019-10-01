@@ -16,7 +16,9 @@ if (lte('3.5.1')) {
       run(function() {
         application = Application.create();
         instance = application.buildInstance();
-        if (typeof instance.setupRegistry === 'function') { instance.setupRegistry(); }
+        if (typeof instance.setupRegistry === 'function') {
+          instance.setupRegistry();
+        }
         initialize(instance);
       });
     });
@@ -54,11 +56,11 @@ if (lte('3.5.1')) {
       const route = classFromSpy(_super).create();
       try {
         route.model();
-      } catch(e) {
-        assert.ok(false, 'the model hook doesn\'t die with route._prefetched is undefined');
+      } catch (e) {
+        assert.ok(false, "the model hook doesn't die with route._prefetched is undefined");
       }
 
-      assert.ok(_super.calledOnce, 'the super class\'s model hook is called');
+      assert.ok(_super.calledOnce, "the super class's model hook is called");
     });
 
     test('the prefetched method returns the promise for the specified route', function(assert) {
@@ -70,8 +72,16 @@ if (lte('3.5.1')) {
       const selfData = {};
       const selfRoute = registerRoute('self', { _prefetched: selfData });
 
-      assert.equal(selfRoute.prefetched('parent')._result, parentData, 'prefetched returns the promise of the named route');
-      assert.equal(selfRoute.prefetched()._result, selfData, 'prefetched returns the promise of the calling route when no name is given');
+      assert.equal(
+        selfRoute.prefetched('parent')._result,
+        parentData,
+        'prefetched returns the promise of the named route'
+      );
+      assert.equal(
+        selfRoute.prefetched()._result,
+        selfData,
+        'prefetched returns the promise of the calling route when no name is given'
+      );
     });
 
     function modelHookTestingHelper(hook) {
@@ -110,10 +120,18 @@ if (lte('3.5.1')) {
       }
       const { model, route, spy: _super } = modelHookTestingHelper.call(this, prefetch);
 
-      return route.model().then((result) => {
-        assert.equal(result, data, 'the model hook returns a promise that resolves with the result of the prefetch hook');
-        assert.notEqual(result, model, 'the promise is not resolved the with result of the super class\'s model hook');
-        assert.notOk(_super.called, 'the super class\'s model hook is not called');
+      return route.model().then(result => {
+        assert.equal(
+          result,
+          data,
+          'the model hook returns a promise that resolves with the result of the prefetch hook'
+        );
+        assert.notEqual(
+          result,
+          model,
+          "the promise is not resolved the with result of the super class's model hook"
+        );
+        assert.notOk(_super.called, "the super class's model hook is not called");
       });
     });
 
@@ -122,9 +140,13 @@ if (lte('3.5.1')) {
 
       const { model, route, spy: _super } = modelHookTestingHelper.call(this);
 
-      return route.model().then((result) => {
-        assert.equal(result, model, 'the model hook returns a promise that resolves with the result of the super class\'s model hook');
-        assert.ok(_super.called, 'the super class\'s model hook is called');
+      return route.model().then(result => {
+        assert.equal(
+          result,
+          model,
+          "the model hook returns a promise that resolves with the result of the super class's model hook"
+        );
+        assert.ok(_super.called, "the super class's model hook is called");
       });
     });
   });

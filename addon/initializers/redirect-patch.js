@@ -4,7 +4,8 @@ import { lte } from 'ember-compatibility-helpers';
 let hasInitialized = false;
 
 export function initialize() {
-  if (lte('3.5.1')) { // Delete all of this in the Ember 3.8 LTS and rev major
+  if (lte('3.5.1')) {
+    // Delete all of this in the Ember 3.8 LTS and rev major
     if (!hasInitialized) {
       hasInitialized = true;
 
@@ -43,7 +44,11 @@ export function initialize() {
             // `willTransition` hook uses `Ember.run.once` to fire the event, which
             // gurantees that it will not trigger `willTransition` multiple times.
             if (stack.length === 1 && transition) {
-              emberRouter.willTransition(latest.oldInfos, transition.state.handlerInfos, latest.transition);
+              emberRouter.willTransition(
+                latest.oldInfos,
+                transition.state.handlerInfos,
+                latest.transition
+              );
               latest = null;
             }
 
@@ -59,5 +64,5 @@ export function initialize() {
 
 export default {
   name: 'redirect-patch',
-  initialize: initialize
+  initialize: initialize,
 };

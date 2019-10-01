@@ -13,12 +13,12 @@ module('Acceptance | redirect', function(hooks) {
     delete window.BarRoute_prefetch_hasRun;
   });
 
-  test('visiting /foo redirects to /bar and calls bar\'s prefetch hook', async function(assert) {
+  test("visiting /foo redirects to /bar and calls bar's prefetch hook", async function(assert) {
     assert.expect(2);
 
     await visit('/foo');
 
     assert.equal(currentURL(), '/bar', '/foo redirected to /bar');
-    assert.equal(window.BarRoute_prefetch_hasRun, 1, 'bar\'s prefetch hook was invoked');
+    assert.equal(window.BarRoute_prefetch_hasRun, 1, "bar's prefetch hook was invoked");
   });
 });

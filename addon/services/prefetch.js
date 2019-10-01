@@ -28,11 +28,11 @@ if (gte('3.6.0')) {
                 let { route, fullParams } = changeSet.for[i];
                 if (seenRoutes.has(route)) continue;
 
-                  route._prefetched = new RSVP.Promise(r => {
-                    return r(route.prefetch(fullParams, transition))
-                  });
-                  seenRoutes.set(route, true);
-                  if (transition.isAborted) return;
+                route._prefetched = new RSVP.Promise(r => {
+                  return r(route.prefetch(fullParams, transition));
+                });
+                seenRoutes.set(route, true);
+                if (transition.isAborted) return;
               }
             }
           }
@@ -42,7 +42,7 @@ if (gte('3.6.0')) {
       this.router.on('routeDidChange', () => {
         seenRoutes = new WeakMap();
       });
-    }
+    },
   });
 }
 

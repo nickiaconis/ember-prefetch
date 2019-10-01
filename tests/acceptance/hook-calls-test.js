@@ -9,93 +9,112 @@ module('Route hooks', function(hooks) {
   setupApplicationTest(hooks);
 
   hooks.beforeEach(function(assert) {
-    this.owner.register('route:application', Route.extend({
-      prefetch() {
-        assert.step('application');
-      }
-    }));
-
-    this.owner.register('route:foo', Route.extend({
-      prefetch() {
-        assert.step('foo');
-      }
-    }));
-
-    this.owner.register('route:parent', Route.extend({
-      prefetch() {
-        assert.step('parent');
-      }
-    }));
-
-    this.owner.register('route:parent.child', Route.extend({
-      prefetch() {
-        assert.step('child');
-      }
-    }));
-
-    this.owner.register('route:queryparams-children', Route.extend({
-      queryParams: {
-        fib: {
-          refreshModel: true,
+    this.owner.register(
+      'route:application',
+      Route.extend({
+        prefetch() {
+          assert.step('application');
         },
-        fiz: {
-          refreshModel: true,
+      })
+    );
+
+    this.owner.register(
+      'route:foo',
+      Route.extend({
+        prefetch() {
+          assert.step('foo');
         },
-      },
-      prefetch() {
-        assert.step('queryparams-children');
-      }
-    }));
+      })
+    );
 
-    this.owner.register('route:queryparams-children.index', Route.extend({
-      prefetch() {
-        assert.step('queryparams-children.index');
-      }
-    }));
+    this.owner.register(
+      'route:parent',
+      Route.extend({
+        prefetch() {
+          assert.step('parent');
+        },
+      })
+    );
 
-    this.owner.register('controller:queryparams-children', Controller.extend({
-      queryParams: [
-        'fib',
-        'fiz',
-      ],
-    }));
+    this.owner.register(
+      'route:parent.child',
+      Route.extend({
+        prefetch() {
+          assert.step('child');
+        },
+      })
+    );
 
-    this.owner.register('controller:queryparams-children.child', Controller.extend({
-      queryParams: [
-        'bar',
-      ],
-    }));
+    this.owner.register(
+      'route:queryparams-children',
+      Route.extend({
+        queryParams: {
+          fib: {
+            refreshModel: true,
+          },
+          fiz: {
+            refreshModel: true,
+          },
+        },
+        prefetch() {
+          assert.step('queryparams-children');
+        },
+      })
+    );
 
-    this.owner.register('route:queryparams-children.child', Route.extend({
-      queryParams: {
-        bar: {
-          refreshModel: true,
-        }
-      },
-      prefetch() {
-        assert.step('queryparams-children.child');
-      }
-    }));
+    this.owner.register(
+      'route:queryparams-children.index',
+      Route.extend({
+        prefetch() {
+          assert.step('queryparams-children.index');
+        },
+      })
+    );
 
-    this.owner.register('route:parent.sibling', Route.extend({
-      prefetch() {
-        assert.step('sibling');
-      }
-    }));
+    this.owner.register(
+      'controller:queryparams-children',
+      Controller.extend({
+        queryParams: ['fib', 'fiz'],
+      })
+    );
+
+    this.owner.register(
+      'controller:queryparams-children.child',
+      Controller.extend({
+        queryParams: ['bar'],
+      })
+    );
+
+    this.owner.register(
+      'route:queryparams-children.child',
+      Route.extend({
+        queryParams: {
+          bar: {
+            refreshModel: true,
+          },
+        },
+        prefetch() {
+          assert.step('queryparams-children.child');
+        },
+      })
+    );
+
+    this.owner.register(
+      'route:parent.sibling',
+      Route.extend({
+        prefetch() {
+          assert.step('sibling');
+        },
+      })
+    );
   });
 
   test('hook counts', async function(assert) {
-
     await visit('/parent/child');
 
     await this.owner.lookup('service:router').transitionTo('/parent/sibling');
 
-    assert.verifySteps([
-      'application',
-      'parent',
-      'child',
-      'sibling'
-    ]);
+    assert.verifySteps(['application', 'parent', 'child', 'sibling']);
   });
 
   test('hook counts for child routes', async function(assert) {
@@ -117,7 +136,7 @@ module('Route hooks', function(hooks) {
       'foo',
       'parent',
       'child',
-      'sibling'
+      'sibling',
     ]);
   });
 
@@ -126,15 +145,18 @@ module('Route hooks', function(hooks) {
 
     await this.owner.lookup('service:router').transitionTo('/qp');
 
-
-    await this.owner.lookup('service:router').transitionTo('queryparams-children', { queryParams: { fiz: true } });
+    await this.owner
+      .lookup('service:router')
+      .transitionTo('queryparams-children', { queryParams: { fiz: true } });
 
     assert.equal(currentURL(), '/qp?fiz=true');
 
     try {
-      await this.owner.lookup('service:router').transitionTo('queryparams-children.child', { queryParams: { bar: true } });
+      await this.owner
+        .lookup('service:router')
+        .transitionTo('queryparams-children.child', { queryParams: { bar: true } });
     } catch (e) {
-      assert.equal(e.name, 'TransitionAborted')
+      assert.equal(e.name, 'TransitionAborted');
     }
 
     await this.owner.lookup('service:router').transitionTo('/parent/child');
@@ -149,7 +171,7 @@ module('Route hooks', function(hooks) {
         'queryparams-children',
         'queryparams-children.child',
         'parent',
-        'child'
+        'child',
       ]);
     } else {
       assert.verifySteps([
@@ -162,30 +184,36 @@ module('Route hooks', function(hooks) {
         'queryparams-children.index',
         'queryparams-children.child',
         'parent',
-        'child'
+        'child',
       ]);
     }
   });
 
   test('hook counts for non-refreshable qps', async function(assert) {
-    this.owner.register('route:queryparams-children', Route.extend({
-      prefetch() {
-        assert.step('queryparams-children');
-      }
-    }));
+    this.owner.register(
+      'route:queryparams-children',
+      Route.extend({
+        prefetch() {
+          assert.step('queryparams-children');
+        },
+      })
+    );
     await visit('/parent/child');
 
     await this.owner.lookup('service:router').transitionTo('/qp');
 
-
-    await this.owner.lookup('service:router').transitionTo('queryparams-children', { queryParams: { fiz: true } });
+    await this.owner
+      .lookup('service:router')
+      .transitionTo('queryparams-children', { queryParams: { fiz: true } });
 
     assert.equal(currentURL(), '/qp?fiz=true');
 
     try {
-      await this.owner.lookup('service:router').transitionTo('queryparams-children.child', { queryParams: { bar: true } });
+      await this.owner
+        .lookup('service:router')
+        .transitionTo('queryparams-children.child', { queryParams: { bar: true } });
     } catch (e) {
-      assert.equal(e.name, 'TransitionAborted')
+      assert.equal(e.name, 'TransitionAborted');
     }
 
     await this.owner.lookup('service:router').transitionTo('/parent/child');
@@ -198,50 +226,62 @@ module('Route hooks', function(hooks) {
       'queryparams-children.index',
       'queryparams-children.child',
       'parent',
-      'child'
+      'child',
     ]);
   });
 
   test('hook counts param change', async function(assert) {
-    this.owner.register('route:profile', Route.extend({
-      prefetch({ id }) {
-        assert.step(`profile-${id}`);
-        return id;
-      }
-    }));
+    this.owner.register(
+      'route:profile',
+      Route.extend({
+        prefetch({ id }) {
+          assert.step(`profile-${id}`);
+          return id;
+        },
+      })
+    );
 
-    this.owner.register('route:profile.view', Route.extend({
-      prefetch(_, transition) {
-        let id;
-        if (transition.to) {
-          id = transition.to.parent.params.id;
-        } else {
-          id = transition.params.profile.id;
-        }
-        assert.step(`profile-view-${id}`);
-        return id;
-      },
-    }));
+    this.owner.register(
+      'route:profile.view',
+      Route.extend({
+        prefetch(_, transition) {
+          let id;
+          if (transition.to) {
+            id = transition.to.parent.params.id;
+          } else {
+            id = transition.params.profile.id;
+          }
+          assert.step(`profile-view-${id}`);
+          return id;
+        },
+      })
+    );
 
-    this.owner.register('route:feed', Route.extend({
-      prefetch({ id }) {
-        assert.step(`feed-${id}`);
-        return id;
-      }
-    }));
+    this.owner.register(
+      'route:feed',
+      Route.extend({
+        prefetch({ id }) {
+          assert.step(`feed-${id}`);
+          return id;
+        },
+      })
+    );
 
-    this.owner.register('route:feed.view', Route.extend({
-      prefetch(_, transition) {
-        let id;
-        if (transition.to) {
-          id = transition.to.parent.params.id;
-        } else {
-          id = transition.params.feed.id;
-        }
-        assert.step(`feed-view-${id}`);
-        return id;
-      },
-    }));
+    this.owner.register(
+      'route:feed.view',
+      Route.extend({
+        prefetch(_, transition) {
+          let id;
+          if (transition.to) {
+            id = transition.to.parent.params.id;
+          } else {
+            id = transition.params.feed.id;
+          }
+          assert.step(`feed-view-${id}`);
+          return id;
+        },
+      })
+    );
 
     await visit('/profile/1/view');
 
@@ -267,7 +307,7 @@ module('Route hooks', function(hooks) {
 
     await click('#p1');
 
-    await click('#f1')
+    await click('#f1');
 
     assert.verifySteps([
       'application',
@@ -281,7 +321,7 @@ module('Route hooks', function(hooks) {
       'feed-view-2',
       'profile-1',
       'profile-view-1',
-      'feed-1'
+      'feed-1',
     ]);
   });
 });

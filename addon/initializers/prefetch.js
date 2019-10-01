@@ -13,5 +13,5 @@ export function initialize() {
 
 export default {
   name: 'prefetch',
-  initialize: initialize
+  initialize: initialize,
 };
