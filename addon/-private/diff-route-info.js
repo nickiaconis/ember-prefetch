@@ -1,11 +1,13 @@
 import { assign } from '@ember/polyfills';
 import { gte } from 'ember-compatibility-helpers';
+import { assert } from '@ember/debug';
 
 export let diffQPs;
 export let shouldRefreshModel;
 export let pathsDiffer;
 export let paramsDiffer;
 export let createPrefetchChangeSet;
+export let pathsRefresh;
 
 if (gte('3.6.0')) {
   // remove guard for Ember 3.8 LTS and rev major
@@ -124,6 +126,46 @@ if (gte('3.6.0')) {
     return routes;
   }
 
+  // This should be invoked if there are no results for queryparams diff(qpsDiff) due to overlapping logic
+  pathsRefresh = function(from, to, intent) {
+    let pivotIndex = -1;
+    let hasMatch = false;
+
+    if (!from || !intent || from.length !== to.length || !intent.pivotHandler) {
+      return [hasMatch, pivotIndex];
+    }
+
+    // only route.refresh and route.refreshModel hook have `NamedTransitionIntent` and has routeName
+    const refreshRouteName = intent.pivotHandler.routeName;
+
+    for (let i = 0; i < from.length; i++) {
+      if (from[i].name === refreshRouteName) {
+        return [true, i];
+      }
+    }
+    assert(
+      'This return section should not be reachable. `refreshRouteName` should be always present for `route.refresh()`'
+    );
+    return [hasMatch, pivotIndex];
+  };
+
+  /**
+    This function checks transition in sequence
+    1. param has changed
+    2. route has changed
+    3. query param has changed
+    4. refresh has invoked from route
+
+    This checking sequence is important, changing sequence could impact in weird ways.
+    For examample, query param invokes route.refresh() if refreshModel is set true on route level.
+    If #4 has invoked prior to #3, it will visit index route of refreshModel hence involves in additional API invocation
+
+    @method createPrefetchChangeSet
+    @param {Object} privateRouter - router
+    @param {Object} transition - transition object
+    @return {Object} An object containing `shouldCall` to invoke prefetch promise on each route and `for` to iterate through affected routes
+    @public
+  */
   createPrefetchChangeSet = function(privateRouter, transition) {
     let toList = createList(transition.to);
     let fromList = createList(transition.from);
@@ -142,6 +184,7 @@ if (gte('3.6.0')) {
       return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
     }
 
+    // Path has changed
     let pathResult = pathsDiffer(fromList, toList);
 
     let [_pathsDiffer] = pathResult;
@@ -153,6 +196,21 @@ if (gte('3.6.0')) {
     }
 
     // Query Params changed
-    return qpsDiffer(privateRouter, toList, transition);
-  }
+    let qpsResult = qpsDiffer(privateRouter, toList, transition);
+    if (qpsResult.shouldCall) {
+      return qpsResult;
+    }
+
+    // route.refresh has invoked
+    let refreshResult = pathsRefresh(fromList, toList, transition.intent);
+    let [_isRefresh] = refreshResult;
+
+    if (_isRefresh) {
+      let [, pivot] = refreshResult;
+      let pivotHandlers = toList.splice(pivot);
+      return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
+    }
+
+    return { shouldCall: false };
+  };
 }

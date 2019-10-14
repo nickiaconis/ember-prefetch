@@ -28,6 +28,10 @@ Router.map(function() {
     this.route('sibling');
   });
 
+  this.route('refresh-parent', function() {
+    this.route('refresh-child');
+  });
+
   this.route('abort-transition-to-child', function() {
     this.route('child');
   });

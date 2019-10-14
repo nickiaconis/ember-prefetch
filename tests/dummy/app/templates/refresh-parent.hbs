@@ -1,0 +1,6 @@
+<h2>Parent</h2>
+<p> Parent Value: <span id="parent-value">{{model.originalValue}}</span> </p>
+{{outlet}}
+{{#link-to "refresh-parent.refresh-child" classNames="link-to-child"}}
+  To Child
+{{/link-to}}
