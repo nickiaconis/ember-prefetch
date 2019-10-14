@@ -3,6 +3,7 @@ import {
   pathsDiffer,
   diffQPs,
   shouldRefreshModel,
+  pathsRefresh,
 } from 'ember-prefetch/-private/diff-route-info';
 import { module, test } from 'qunit';
 import { assign } from '@ember/polyfills';
@@ -187,6 +188,72 @@ if (gte('3.6.0')) {
         queryParams: {},
       };
       assert.deepEqual(diffQPs(info, info2), ['a', 'c']);
+    });
+  });
+
+  module('pathRefresh', () => {
+    test('returns false if the paths are the same but do not have any intent', assert => {
+      let info = {
+        name: 'foo.bar',
+      };
+      let [match] = pathsRefresh([info], [info], undefined);
+      assert.notOk(match);
+    });
+
+    test('returns false if the paths are different', assert => {
+      let info = [{ name: 'foo.bar' }];
+
+      let intent = {
+        pivotHandler: {
+          routeName: 'foo',
+        },
+      };
+
+      let info2 = [info[0], { name: 'baz.bar' }];
+      let [match] = pathsRefresh(info, info2, intent);
+      assert.notOk(match);
+    });
+
+    test('returns true if the paths match and has pivotRouteName same as parent route', assert => {
+      let info = [
+        {
+          name: 'foo',
+        },
+        {
+          name: 'foo.bar',
+        },
+      ];
+
+      let intent = {
+        pivotHandler: {
+          routeName: 'foo',
+        },
+      };
+
+      let info2 = info;
+      let [match] = pathsRefresh(info, info2, intent);
+      assert.ok(match);
+    });
+
+    test('returns true if the paths match and has pivotRouteName same as leaf route', assert => {
+      let info = [
+        {
+          name: 'foo',
+        },
+        {
+          name: 'foo.bar',
+        },
+      ];
+
+      let intent = {
+        pivotHandler: {
+          routeName: 'foo.bar',
+        },
+      };
+
+      let info2 = info;
+      let [match] = pathsRefresh(info, info2, intent);
+      assert.ok(match);
     });
   });
 
