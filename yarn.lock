@@ -635,6 +635,11 @@
     array-from "^2.1.1"
     lodash.get "^4.4.2"
 
+"@types/minimatch@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
+  integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
+
 abbrev@1:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.0.9.tgz#91b4792588a7738c25f35dd6f63752a2f8776135"
@@ -2355,7 +2360,7 @@ debug@^3.1.0:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.0.1, debug@^4.1.0, debug@~4.1.0:
+debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@~4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
   dependencies:
@@ -2892,23 +2897,24 @@ ember-try-config@^3.0.0:
     rsvp "^4.8.1"
     semver "^5.5.0"
 
-ember-try@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ember-try/-/ember-try-1.1.0.tgz#194d5843a79b5a9fc0e4c07445ebc18c08a91e78"
+ember-try@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ember-try/-/ember-try-1.3.0.tgz#394bdcd726e5acd2ebf8422c7bcf9ecf0aa2c2ac"
+  integrity sha512-XtVhBHNQVdVu5LouyNLhGeKx0f88lz9VtrSf1NYFulVlOHIQEeZCEIs3pTifGhtZJ0B7POPKMdPpNso77Z95uQ==
   dependencies:
-    chalk "^2.3.0"
+    chalk "^2.4.2"
     cli-table3 "^0.5.1"
     core-object "^3.1.5"
-    debug "^3.1.0"
+    debug "^4.1.1"
     ember-try-config "^3.0.0"
     execa "^1.0.0"
     extend "^3.0.0"
     fs-extra "^5.0.0"
     promise-map-series "^0.2.1"
-    resolve "^1.1.6"
-    rimraf "^2.3.2"
+    resolve "^1.10.1"
+    rimraf "^2.6.3"
     rsvp "^4.7.0"
-    walk-sync "^0.3.3"
+    walk-sync "^1.1.3"
 
 emit-function@0.0.2:
   version "0.0.2"
@@ -2968,6 +2974,11 @@ engine.io@~3.3.1:
 ensure-posix-path@^1.0.0, ensure-posix-path@^1.0.1, ensure-posix-path@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/ensure-posix-path/-/ensure-posix-path-1.0.2.tgz#a65b3e42d0b71cfc585eb774f9943c8d9b91b0c2"
+
+ensure-posix-path@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ensure-posix-path/-/ensure-posix-path-1.1.1.tgz#3c62bdb19fa4681544289edb2b382adc029179ce"
+  integrity sha512-VWU0/zXzVbeJNXvME/5EmLuEj2TauvoaTz6aFYK1Z92JCBlDlZ3Gu0tuGR42kpW1754ywTs+QB0g5TP0oj9Zaw==
 
 entities@~1.1.1:
   version "1.1.1"
@@ -4897,6 +4908,13 @@ matcher-collection@^1.0.0, matcher-collection@^1.0.5:
   dependencies:
     minimatch "^3.0.2"
 
+matcher-collection@^1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/matcher-collection/-/matcher-collection-1.1.2.tgz#1076f506f10ca85897b53d14ef54f90a5c426838"
+  integrity sha512-YQ/teqaOIIfUHedRam08PB3NK7Mjct6BvzRnJmpGDm8uFXpNr1sbY4yuflI5JcEs6COpYA0FpRQhSDBf1tT95g==
+  dependencies:
+    minimatch "^3.0.2"
+
 md5-hex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/md5-hex/-/md5-hex-2.0.0.tgz#d0588e9f1c74954492ecd24ac0ac6ce997d92e33"
@@ -5857,7 +5875,7 @@ resolve@1.5.0:
   dependencies:
     path-parse "^1.0.5"
 
-resolve@^1.1.3, resolve@^1.1.6, resolve@^1.3.2, resolve@^1.3.3, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.6.0, resolve@^1.8.1:
+resolve@^1.1.3, resolve@^1.3.2, resolve@^1.3.3, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.6.0, resolve@^1.8.1:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.9.0.tgz#a14c6fdfa8f92a7df1d996cb7105fa744658ea06"
   dependencies:
@@ -5886,9 +5904,16 @@ ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
 
-rimraf@2.6.3, rimraf@^2.2.8, rimraf@^2.3.2, rimraf@^2.3.4, rimraf@^2.4.3, rimraf@^2.4.4, rimraf@^2.5.3, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
+rimraf@2.6.3, rimraf@^2.2.8, rimraf@^2.3.4, rimraf@^2.4.3, rimraf@^2.4.4, rimraf@^2.5.3, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.3.tgz#b2d104fe0d8fb27cf9e0a1cda8262dd3833c6cab"
+  dependencies:
+    glob "^7.1.3"
+
+rimraf@^2.6.3:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
+  integrity sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
   dependencies:
     glob "^7.1.3"
 
@@ -6763,6 +6788,15 @@ walk-sync@^1.0.0:
   dependencies:
     ensure-posix-path "^1.0.0"
     matcher-collection "^1.0.0"
+
+walk-sync@^1.1.3:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/walk-sync/-/walk-sync-1.1.4.tgz#81049f3d8095479b49574cfa5f558d7a252b127d"
+  integrity sha512-nowc9thB/Jg0KW4TgxoRjLLYRPvl3DB/98S89r4ZcJqq2B0alNcKDh6pzLkBSkPMzRSMsJghJHQi79qw0YWEkA==
+  dependencies:
+    "@types/minimatch" "^3.0.3"
+    ensure-posix-path "^1.1.0"
+    matcher-collection "^1.1.1"
 
 walker@~1.0.5:
   version "1.0.7"
