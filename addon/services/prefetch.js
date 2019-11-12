@@ -7,6 +7,7 @@ import { gte } from 'ember-compatibility-helpers';
 let PrefetchService;
 
 if (gte('3.6.0')) {
+  let substatesRegex = /(^|_|\.)(loading$|error$)/;
   // remove guard for Ember 3.8 LTS and rev major
   PrefetchService = Service.extend({
     router: service('router'),
@@ -16,7 +17,7 @@ if (gte('3.6.0')) {
       let seenRoutes = new WeakMap();
 
       this.router.on('routeWillChange', transition => {
-        if (transition.to && /(^|_|\.)(loading$|error$)/.test(transition.to.name)) {
+        if (transition.to && substatesRegex.test(transition.to.name)) {
           return;
         }
 
