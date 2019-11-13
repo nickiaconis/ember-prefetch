@@ -42,7 +42,7 @@ export default function setupRouterForEngine(hooks) {
 
           return enginePromise.then(() => getRoute(name));
         };
-      }
+      },
     });
 
     /**
@@ -58,4 +58,3 @@ export default function setupRouterForEngine(hooks) {
     this.owner.lookup('router:main')._routerMicrolib.getRoute = getRoute;
   });
 }
-

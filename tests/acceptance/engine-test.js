@@ -23,32 +23,40 @@ module('lazy engine loading', function(hooks) {
     );
     this.owner.register('template:application', hbs`{{outlet}}`);
     this.owner.register('controller:application', Controller.extend());
-    debugger;
     AppRouter.map(function() {
       this.mount('blog');
     });
     this.owner.register('route-map:blog', function() {
       this.route('post');
     });
-    this.owner.register('engine:blog', Engine.extend({
-      init() {
-        this._super(...arguments);
-        this.register('template:application', hbs`{{outlet}}`);
-        this.register('controller:application', Controller.extend());
+    this.owner.register(
+      'engine:blog',
+      Engine.extend({
+        init() {
+          this._super(...arguments);
+          this.register('template:application', hbs`{{outlet}}`);
+          this.register('controller:application', Controller.extend());
 
-        this.register('template:post', hbs`Post {{this.model}}`);
-        this.register('route:application', Route.extend({
-          prefetch() {
-            assert.step('blog-application');
-          }
-        }));
-        this.register('route:post', Route.extend({
-          prefetch() {
-            assert.step('blog-post');
-          }
-        }));
-      }
-    }))
+          this.register('template:post', hbs`Post {{this.model}}`);
+          this.register(
+            'route:application',
+            Route.extend({
+              prefetch() {
+                assert.step('blog-application');
+              },
+            })
+          );
+          this.register(
+            'route:post',
+            Route.extend({
+              prefetch() {
+                assert.step('blog-post');
+              },
+            })
+          );
+        },
+      })
+    );
   });
 
   test('prefetch hook on lazy engine is called', async function(assert) {
@@ -57,4 +65,3 @@ module('lazy engine loading', function(hooks) {
     assert.equal(currentURL(), '/blog/post');
   });
 });
-

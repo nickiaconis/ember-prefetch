@@ -1,13 +1,12 @@
 import Route from '@ember/routing/route';
 import RouteMixin from 'ember-prefetch/mixins/route';
+import { gte } from 'ember-compatibility-helpers';
 
-let hasInitialized = false;
+Route.reopen(RouteMixin);
 
-export function initialize() {
-  if (!hasInitialized) {
-    hasInitialized = true;
-
-    Route.reopen(RouteMixin);
+export function initialize(application) {
+  if (gte('3.6.0')) {
+    application.inject('route:application', '__prefetch', 'service:prefetch');
   }
 }
 
