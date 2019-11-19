@@ -48,7 +48,7 @@ module('Acceptance | query-params', function(hooks) {
         },
         prefetch() {
           assert.step('queryparams');
-        }
+        },
       })
     );
     this.owner.register(
@@ -156,10 +156,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?foo=bar', 'the query param is set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('loading a route with a query param marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -170,10 +167,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('loading a route with multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -184,10 +178,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fib=fab&fiz=baz', 'the query params are set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('transitioning to a route with a query param runs the prefetch hook', async function(assert) {
@@ -200,10 +191,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?foo=bar', 'the query param is set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('transitioning to a route with a query param marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -222,10 +210,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('transitioning to a route with multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -249,14 +234,11 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fib=fab&fiz=baz', 'the query params are set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('transitioning to a route with multiple query params marked with refreshModel that redirects to a route with multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
-  assert.expect(6);
+    assert.expect(6);
 
     await visit('/');
 
@@ -276,10 +258,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fib=fab&fiz=baz', 'the query params are set');
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
   });
 
   test('changing a query param does not run the prefetch hook', async function(assert) {
@@ -287,10 +266,7 @@ module('Acceptance | query-params', function(hooks) {
 
     await visit('/queryparams');
 
-    assert.verifySteps([
-      'application',
-      'queryparams'
-    ]);
+    assert.verifySteps(['application', 'queryparams']);
 
     await this.router.transitionTo('queryparams', { queryParams: { foo: 'bar' } });
 
@@ -313,11 +289,10 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fiz=biz&foo=bar', 'the query params are set');
-    assert.verifySteps([
-      'application',
-      'queryparams',
-      'queryparams'
-    ], 'the prefetch hook was only run twice');
+    assert.verifySteps(
+      ['application', 'queryparams', 'queryparams'],
+      'the prefetch hook was only run twice'
+    );
   });
 
   test('changing a query param marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -332,11 +307,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fiz=baz', 'the query param is set');
-    assert.verifySteps([
-      'application',
-      'queryparams',
-      'queryparams'
-    ], 'prefetch hook run twice');
+    assert.verifySteps(['application', 'queryparams', 'queryparams'], 'prefetch hook run twice');
   });
 
   test('changing multiple query params marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -355,11 +326,7 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.substring(url.indexOf('?')), '?fib=fab&fiz=baz', 'the query params are set');
-    assert.verifySteps([
-      'application',
-      'queryparams',
-      'queryparams'
-    ], 'prefetch hook run twice');
+    assert.verifySteps(['application', 'queryparams', 'queryparams'], 'prefetch hook run twice');
   });
 
   test('removing a query param marked with refreshModel runs the prefetch hook', async function(assert) {
@@ -377,12 +344,10 @@ module('Acceptance | query-params', function(hooks) {
     const url = currentURL();
     assert.equal(currentRouteName(), 'queryparams', 'the desired route is reached');
     assert.equal(url.indexOf('?'), -1, 'the query param is set');
-    assert.verifySteps([
-      'application',
-      'queryparams',
-      'queryparams',
-      'queryparams'
-    ], 'prefetch hook run thrice');
+    assert.verifySteps(
+      ['application', 'queryparams', 'queryparams', 'queryparams'],
+      'prefetch hook run thrice'
+    );
   });
 
   test('hook counts for refresh qps', async function(assert) {

@@ -1,8 +1,7 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, currentURL, click } from '@ember/test-helpers';
+import { visit, click } from '@ember/test-helpers';
 import Route from '@ember/routing/route';
-import Controller from '@ember/controller';
 
 module('Route hooks', function(hooks) {
   setupApplicationTest(hooks);

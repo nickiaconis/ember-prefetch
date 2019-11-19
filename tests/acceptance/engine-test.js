@@ -40,7 +40,7 @@ module('lazy engine loading', function(hooks) {
             'controller:application',
             Controller.extend({
               queryParams: ['bar'],
-              bar: undefined
+              bar: undefined,
             })
           );
 
@@ -67,18 +67,18 @@ module('lazy engine loading', function(hooks) {
               queryParams: {
                 foo: {
                   refreshModel: true,
-                }
+                },
               },
               prefetch() {
                 assert.step('blog-queryparams');
-              }
+              },
             })
           );
           this.register(
             'controller:queryparams',
             Controller.extend({
               queryParams: ['foo'],
-              foo: 1
+              foo: 1,
             })
           );
         },
@@ -96,11 +96,6 @@ module('lazy engine loading', function(hooks) {
     assert.expect(5);
     await visit('/blog/queryparams?foo=1');
     await this.owner.lookup('service:router').transitionTo('blog.queryparams');
-    assert.verifySteps([
-      'application',
-      'blog-application',
-      'blog-queryparams',
-      'blog-queryparams'
-    ]);
+    assert.verifySteps(['application', 'blog-application', 'blog-queryparams', 'blog-queryparams']);
   });
 });

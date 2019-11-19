@@ -206,7 +206,7 @@ if (gte('3.6.0')) {
       let intent = {
         pivotHandler: {
           fullRouteName: 'namespace.foo',
-          routeName: 'foo'
+          routeName: 'foo',
         },
       };
 
