@@ -139,8 +139,8 @@ if (gte('3.6.0')) {
       return [hasMatch, pivotIndex];
     }
 
-    // only route.refresh and route.refreshModel hook have `NamedTransitionIntent` and has routeName
-    const refreshRouteName = intent.pivotHandler.routeName;
+    // only route.refresh and route.refreshModel hook have `NamedTransitionIntent` and has fullRouteName
+    const refreshRouteName = intent.pivotHandler.fullRouteName;
 
     for (let i = 0; i < from.length; i++) {
       if (from[i].name === refreshRouteName) {
@@ -154,13 +154,13 @@ if (gte('3.6.0')) {
   };
 
   /**
-    This function checks transition in sequence 
+    This function checks transition in sequence
     1. param has changed
     2. route has changed
     3. query param has changed
     4. refresh has invoked from route
-    
-    This checking sequence is important, changing sequence could impact in weird ways. 
+
+    This checking sequence is important, changing sequence could impact in weird ways.
     For examample, query param invokes route.refresh() if refreshModel is set true on route level.
     If #4 has invoked prior to #3, it will visit index route of refreshModel hence involves in additional API invocation
 
