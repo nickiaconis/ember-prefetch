@@ -52,12 +52,22 @@ if (gte('3.6.0')) {
     });
   }
 
+  /**
+   * This method checks if from and to routes are navigating away from current route.
+   * For e.g. one navigating from `profile.view` to `profile.details`
+   *
+   * @method pathsDiffer
+   * @param {Object} from - from route list
+   * @param {Object} to - to route list
+   * @return {Array} An array containing mismatch and pivotIndex.
+   * @public
+   */
   pathsDiffer = function(from, to) {
     let pivotIndex = -1;
     let mismatch = false;
     for (let i = 0; i < to.length; i++) {
       let info = to[i];
-      if (info.name !== from[i].name) {
+      if (info.name !== from[i].name || !paramsMatch(info, from[i])) {
         pivotIndex = i;
         mismatch = true;
         break;
@@ -67,6 +77,16 @@ if (gte('3.6.0')) {
     return [mismatch, pivotIndex];
   };
 
+  /**
+   * This check only validate if from and to routes are identical but contains different
+   * parameters.
+   *
+   * @method paramsDiffer
+   * @param {Object} from - from route list
+   * @param {Object} to - to route list
+   * @return {Array} An array containing mismatch and pivotIndex.
+   * @public
+   */
   paramsDiffer = function(from, to) {
     let pivotIndex = -1;
     let mismatch = false;
@@ -154,13 +174,13 @@ if (gte('3.6.0')) {
   };
 
   /**
-    This function checks transition in sequence 
+    This function checks transition in sequence
     1. param has changed
     2. route has changed
     3. query param has changed
     4. refresh has invoked from route
-    
-    This checking sequence is important, changing sequence could impact in weird ways. 
+
+    This checking sequence is important, changing sequence could impact in weird ways.
     For examample, query param invokes route.refresh() if refreshModel is set true on route level.
     If #4 has invoked prior to #3, it will visit index route of refreshModel hence involves in additional API invocation
 

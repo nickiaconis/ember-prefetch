@@ -101,6 +101,7 @@ if (gte('3.6.0')) {
     test('returns false if the paths are the same', assert => {
       let info = {
         name: 'foo.bar',
+        paramNames: [],
       };
       let [match] = pathsDiffer([info], [info]);
       assert.notOk(match);
@@ -122,6 +123,32 @@ if (gte('3.6.0')) {
       let info2 = assign({}, info, { name: 'baz.bar' });
       let [match] = pathsDiffer([info], [info2]);
       assert.ok(match);
+    });
+
+    test('returns true if the paths and params have changed', assert => {
+      let root = {
+        name: 'root',
+        paramNames: [],
+      };
+      let foo = {
+        name: 'root.foo',
+        paramNames: ['foo_id'],
+      };
+
+      let from = [
+        root,
+        assign({}, foo, { params: { foo_id: 1 } }),
+        { name: 'root.foo.bar', paramNames: [] },
+      ];
+      let to = [
+        root,
+        assign({}, foo, { params: { foo_id: 2 } }),
+        { name: 'root.foo.baz', paramNames: [] },
+      ];
+
+      let [match, pivotIndex] = pathsDiffer(from, to);
+      assert.ok(match);
+      assert.equal(pivotIndex, 1, 'pivot should start from where param has modified');
     });
 
     test('returns true if the paths mismatch', assert => {
