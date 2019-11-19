@@ -200,12 +200,26 @@ if (gte('3.6.0')) {
       assert.notOk(match);
     });
 
+    test('returns true if the path mathes fullRouteName', assert => {
+      let info = [{ name: 'namespace.foo' }];
+
+      let intent = {
+        pivotHandler: {
+          fullRouteName: 'namespace.foo',
+          routeName: 'foo'
+        },
+      };
+
+      let [match] = pathsRefresh(info, info, intent);
+      assert.ok(match);
+    });
+
     test('returns false if the paths are different', assert => {
       let info = [{ name: 'foo.bar' }];
 
       let intent = {
         pivotHandler: {
-          routeName: 'foo',
+          fullRouteName: 'foo',
         },
       };
 
@@ -226,7 +240,7 @@ if (gte('3.6.0')) {
 
       let intent = {
         pivotHandler: {
-          routeName: 'foo',
+          fullRouteName: 'foo',
         },
       };
 
@@ -247,7 +261,7 @@ if (gte('3.6.0')) {
 
       let intent = {
         pivotHandler: {
-          routeName: 'foo.bar',
+          fullRouteName: 'foo.bar',
         },
       };
 
