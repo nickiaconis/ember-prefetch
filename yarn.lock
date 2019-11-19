@@ -2851,6 +2851,13 @@ ember-source-channel-url@^1.0.1, ember-source-channel-url@^1.1.0:
   dependencies:
     got "^8.0.1"
 
+ember-source-channel-url@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ember-source-channel-url/-/ember-source-channel-url-2.0.0.tgz#06f90e1ada3df21ba43fd241edef133b57f8e6bd"
+  integrity sha512-rfPZDU/00/MI4YQCnqUWFjjnbrf3yS1gVMgu2r2FMnx1pX5gOOTiqorKfotKZt5e47mLoYj0bTwca7sT1bTJIQ==
+  dependencies:
+    got "^8.0.1"
+
 ember-source@~3.7.0:
   version "3.7.3"
   resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.7.3.tgz#ae66f5c37d928908d2cc6891dab46d24a8168678"
