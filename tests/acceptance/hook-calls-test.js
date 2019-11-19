@@ -1,9 +1,7 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, currentURL, click } from '@ember/test-helpers';
+import { visit, click } from '@ember/test-helpers';
 import Route from '@ember/routing/route';
-import Controller from '@ember/controller';
-import { gte } from 'ember-compatibility-helpers';
 
 module('Route hooks', function(hooks) {
   setupApplicationTest(hooks);
@@ -46,60 +44,6 @@ module('Route hooks', function(hooks) {
     );
 
     this.owner.register(
-      'route:queryparams-children',
-      Route.extend({
-        queryParams: {
-          fib: {
-            refreshModel: true,
-          },
-          fiz: {
-            refreshModel: true,
-          },
-        },
-        prefetch() {
-          assert.step('queryparams-children');
-        },
-      })
-    );
-
-    this.owner.register(
-      'route:queryparams-children.index',
-      Route.extend({
-        prefetch() {
-          assert.step('queryparams-children.index');
-        },
-      })
-    );
-
-    this.owner.register(
-      'controller:queryparams-children',
-      Controller.extend({
-        queryParams: ['fib', 'fiz'],
-      })
-    );
-
-    this.owner.register(
-      'controller:queryparams-children.child',
-      Controller.extend({
-        queryParams: ['bar'],
-      })
-    );
-
-    this.owner.register(
-      'route:queryparams-children.child',
-      Route.extend({
-        queryParams: {
-          bar: {
-            refreshModel: true,
-          },
-        },
-        prefetch() {
-          assert.step('queryparams-children.child');
-        },
-      })
-    );
-
-    this.owner.register(
       'route:parent.sibling',
       Route.extend({
         prefetch() {
@@ -137,96 +81,6 @@ module('Route hooks', function(hooks) {
       'parent',
       'child',
       'sibling',
-    ]);
-  });
-
-  test('hook counts for refresh qps', async function(assert) {
-    await visit('/parent/child');
-
-    await this.owner.lookup('service:router').transitionTo('/qp');
-
-    await this.owner
-      .lookup('service:router')
-      .transitionTo('queryparams-children', { queryParams: { fiz: true } });
-
-    assert.equal(currentURL(), '/qp?fiz=true');
-
-    try {
-      await this.owner
-        .lookup('service:router')
-        .transitionTo('queryparams-children.child', { queryParams: { bar: true } });
-    } catch (e) {
-      assert.equal(e.name, 'TransitionAborted');
-    }
-
-    await this.owner.lookup('service:router').transitionTo('/parent/child');
-
-    if (gte('3.6.0')) {
-      assert.verifySteps([
-        'application',
-        'parent',
-        'child',
-        'queryparams-children',
-        'queryparams-children.index',
-        'queryparams-children',
-        'queryparams-children.child',
-        'parent',
-        'child',
-      ]);
-    } else {
-      assert.verifySteps([
-        'application',
-        'parent',
-        'child',
-        'queryparams-children',
-        'queryparams-children.index',
-        'queryparams-children',
-        'queryparams-children.index',
-        'queryparams-children.child',
-        'parent',
-        'child',
-      ]);
-    }
-  });
-
-  test('hook counts for non-refreshable qps', async function(assert) {
-    this.owner.register(
-      'route:queryparams-children',
-      Route.extend({
-        prefetch() {
-          assert.step('queryparams-children');
-        },
-      })
-    );
-    await visit('/parent/child');
-
-    await this.owner.lookup('service:router').transitionTo('/qp');
-
-    await this.owner
-      .lookup('service:router')
-      .transitionTo('queryparams-children', { queryParams: { fiz: true } });
-
-    assert.equal(currentURL(), '/qp?fiz=true');
-
-    try {
-      await this.owner
-        .lookup('service:router')
-        .transitionTo('queryparams-children.child', { queryParams: { bar: true } });
-    } catch (e) {
-      assert.equal(e.name, 'TransitionAborted');
-    }
-
-    await this.owner.lookup('service:router').transitionTo('/parent/child');
-
-    assert.verifySteps([
-      'application',
-      'parent',
-      'child',
-      'queryparams-children',
-      'queryparams-children.index',
-      'queryparams-children.child',
-      'parent',
-      'child',
     ]);
   });
 

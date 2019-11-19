@@ -159,8 +159,8 @@ if (gte('3.6.0')) {
       return [hasMatch, pivotIndex];
     }
 
-    // only route.refresh and route.refreshModel hook have `NamedTransitionIntent` and has routeName
-    const refreshRouteName = intent.pivotHandler.routeName;
+    // only route.refresh and route.refreshModel hook have `NamedTransitionIntent` and has fullRouteName
+    const refreshRouteName = intent.pivotHandler.fullRouteName;
 
     for (let i = 0; i < from.length; i++) {
       if (from[i].name === refreshRouteName) {

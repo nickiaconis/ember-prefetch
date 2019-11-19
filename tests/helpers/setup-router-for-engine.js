@@ -44,14 +44,6 @@ export default function setupRouterForEngine(hooks) {
         };
       },
     });
-
-    /**
-     * This override is copied from what ember-engines does. It allows handlers to
-     * be loaded asynchronously by not checking the handler directly for meta info
-     */
-    router._getQPMeta = function _newGetQPMeta(handlerInfo) {
-      return this._bucketCache.lookup('route-meta', handlerInfo.name);
-    };
   });
 
   hooks.afterEach(function() {

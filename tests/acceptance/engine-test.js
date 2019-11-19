@@ -28,6 +28,7 @@ module('lazy engine loading', function(hooks) {
     });
     this.owner.register('route-map:blog', function() {
       this.route('post');
+      this.route('queryparams');
     });
     this.owner.register(
       'engine:blog',
@@ -35,7 +36,13 @@ module('lazy engine loading', function(hooks) {
         init() {
           this._super(...arguments);
           this.register('template:application', hbs`{{outlet}}`);
-          this.register('controller:application', Controller.extend());
+          this.register(
+            'controller:application',
+            Controller.extend({
+              queryParams: ['bar'],
+              bar: undefined,
+            })
+          );
 
           this.register('template:post', hbs`Post {{this.model}}`);
           this.register(
@@ -54,6 +61,26 @@ module('lazy engine loading', function(hooks) {
               },
             })
           );
+          this.register(
+            'route:queryparams',
+            Route.extend({
+              queryParams: {
+                foo: {
+                  refreshModel: true,
+                },
+              },
+              prefetch() {
+                assert.step('blog-queryparams');
+              },
+            })
+          );
+          this.register(
+            'controller:queryparams',
+            Controller.extend({
+              queryParams: ['foo'],
+              foo: 1,
+            })
+          );
         },
       })
     );
@@ -63,5 +90,12 @@ module('lazy engine loading', function(hooks) {
     await visit('/blog/post');
     assert.verifySteps(['application', 'blog-application', 'blog-post']);
     assert.equal(currentURL(), '/blog/post');
+  });
+
+  test('prefetch hook refreshes on refreshModel QP change', async function(assert) {
+    assert.expect(5);
+    await visit('/blog/queryparams?foo=1');
+    await this.owner.lookup('service:router').transitionTo('blog.queryparams');
+    assert.verifySteps(['application', 'blog-application', 'blog-queryparams', 'blog-queryparams']);
   });
 });
