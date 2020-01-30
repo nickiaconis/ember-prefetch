@@ -61,7 +61,7 @@
     "test": "tests"
   },
   "dependencies": {
-    "ember-cli-babel": "^7.1.2",
+    "ember-cli-babel": "^7.14.1",
     "ember-compatibility-helpers": "^1.1.2"
   },
   "ember-addon": {
