@@ -30,7 +30,7 @@
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^3.4.1",
     "ember-resolver": "^5.0.1",
-    "ember-sinon": "^3.1.0",
+    "ember-sinon": "^5.0.0",
     "ember-sinon-qunit": "^3.4.0",
     "ember-source": "~3.8.3",
     "ember-source-channel-url": "^1.1.0",
