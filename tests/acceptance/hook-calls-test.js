@@ -178,4 +178,31 @@ module('Route hooks', function(hooks) {
       'feed-1',
     ]);
   });
+
+  test('hook counts for same depth routes', async function(assert) {
+    this.owner.register(
+      'route:step-parent',
+      Route.extend({
+        prefetch() {
+          assert.step('step-parent');
+        },
+      })
+    );
+
+    this.owner.register(
+      'route:step-parent.step-child',
+      Route.extend({
+        prefetch({ id }) {
+          assert.step(`step-child-${id}`);
+          return id;
+        },
+      })
+    );
+
+    await visit('/step-parent/step-child/1');
+
+    await this.owner.lookup('service:router').transitionTo('/parent/sibling');
+
+    assert.verifySteps(['application', 'step-parent', 'step-child-1', 'parent', 'sibling']);
+  });
 });

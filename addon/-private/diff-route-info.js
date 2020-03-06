@@ -175,14 +175,13 @@ if (gte('3.6.0')) {
 
   /**
     This function checks transition in sequence
-    1. param has changed
-    2. route has changed
-    3. query param has changed
-    4. refresh has invoked from route
+    1. param or route has changed
+    2. query param has changed
+    3. refresh has invoked from route
 
     This checking sequence is important, changing sequence could impact in weird ways.
     For examample, query param invokes route.refresh() if refreshModel is set true on route level.
-    If #4 has invoked prior to #3, it will visit index route of refreshModel hence involves in additional API invocation
+    If #3 has invoked prior to #2, it will visit index route of refreshModel hence involves in additional API invocation
 
     @method createPrefetchChangeSet
     @param {Object} privateRouter - router
@@ -199,22 +198,18 @@ if (gte('3.6.0')) {
     }
 
     let paramsResult = paramsDiffer(fromList, toList);
-    let [_paramsDiffer] = paramsResult;
-
-    // Params Changed
-    if (_paramsDiffer) {
-      let [, pivot] = paramsResult;
-      let pivotHandlers = toList.splice(pivot, toList.length);
-      return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
-    }
-
-    // Path has changed
+    let [_paramsDiffer, _paramsPivot] = paramsResult;
     let pathResult = pathsDiffer(fromList, toList);
+    let [_pathsDiffer, _pathsPivot] = pathResult;
 
-    let [_pathsDiffer] = pathResult;
-
-    if (_pathsDiffer) {
-      let [, pivot] = pathResult;
+    // Params or Path changed
+    if (_paramsDiffer || _pathsDiffer) {
+      let pivot;
+      if (_paramsDiffer && _pathsDiffer) {
+        pivot = Math.min(_paramsPivot, _pathsPivot);
+      } else {
+        pivot = _paramsDiffer ? _paramsPivot : _pathsPivot;
+      }
       let pivotHandlers = toList.splice(pivot, toList.length);
       return { shouldCall: true, for: getPrefetched(privateRouter, pivotHandlers) };
     }
